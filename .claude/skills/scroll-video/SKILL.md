@@ -69,6 +69,12 @@ ffmpeg -i hero.mp4 \
 ```css
 .scroll-video-wrapper { height: 175vh; }
 .scroll-video-wrapper .hero { position: sticky; top: 0; height: 100vh; }
+
+/* Móvil: hero normal sin scroll-driven (Safari iOS no soporta scrubbing fiable) */
+@media (max-width: 768px) {
+  .scroll-video-wrapper { height: auto; }
+  .scroll-video-wrapper .hero { position: relative; }
+}
 ```
 
 ---
@@ -76,7 +82,24 @@ ffmpeg -i hero.mp4 \
 ## JS completo
 
 ```javascript
+// MÓVIL: bypass scroll-driven (usar autoplay simple, siempre fluido)
 (function () {
+  var video = document.getElementById('heroVideo');
+  if (!video) return;
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    video.setAttribute('autoplay', '');
+    video.setAttribute('loop', '');
+    video.muted = true;
+    video.loop = true;
+    video.play().catch(function () {});
+    return;
+  }
+}());
+
+// DESKTOP: scroll-driven scrubbing
+(function () {
+  if (window.matchMedia('(max-width: 768px)').matches) return;
+
   var video   = document.getElementById('heroVideo');
   var wrapper = document.querySelector('.scroll-video-wrapper');
   if (!video || !wrapper) return;

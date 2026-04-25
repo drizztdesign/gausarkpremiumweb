@@ -144,6 +144,11 @@
     .hero { position: relative; height: 100vh; min-height: 600px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #1c1c1c; }
     .scroll-video-wrapper { height: 175vh; }
     .scroll-video-wrapper .hero { position: sticky; top: 0; height: 100vh; }
+    /* Móvil: hero normal, sin scroll-driven (autoplay simple, siempre fluido) */
+    @media (max-width: 768px) {
+      .scroll-video-wrapper { height: auto; }
+      .scroll-video-wrapper .hero { position: relative; }
+    }
     .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.58); }
     .hero-content { position: relative; z-index: 2; text-align: center; color: #fff; padding: 0 1.5rem; max-width: 780px; }
@@ -434,8 +439,24 @@
   const header = document.getElementById('header');
   window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 60), { passive: true });
 
-  // Scroll-driven video: play forward on scroll, reverse on scroll up, locked until end
+  // Mobile: bypass scroll-driven, usar autoplay simple (siempre fluido)
   (function () {
+    var video = document.getElementById('heroVideo');
+    if (!video) return;
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      video.setAttribute('autoplay', '');
+      video.setAttribute('loop', '');
+      video.muted = true;
+      video.loop = true;
+      video.play().catch(function () {});
+      return; // saltar todo el scroll-driven en móvil
+    }
+  }());
+
+  // Desktop: scroll-driven video (pinned + scrubbing)
+  (function () {
+    if (window.matchMedia('(max-width: 768px)').matches) return;
+
     var video   = document.getElementById('heroVideo');
     var wrapper = document.querySelector('.scroll-video-wrapper');
     if (!video || !wrapper) return;
