@@ -70,7 +70,7 @@
       --color-mid: #666;
       --color-light: #f5f4f1;
       --color-white: #fff;
-      --color-accent: #b8925a;
+      --color-accent: #ff9901;
       --color-border: #e2e0dc;
       --font-display: 'Cormorant Garamond', serif;
       --font-body: 'Nunito', sans-serif;
@@ -102,7 +102,8 @@
 
     /* HISTORIA */
     .historia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
-    .historia-img { aspect-ratio: 3/4; background: var(--color-light); display: flex; align-items: center; justify-content: center; color: var(--color-mid); font-size: .85rem; }
+    .historia-img { aspect-ratio: 3/4; background: var(--color-light); overflow: hidden; }
+    .historia-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .historia-text .title { margin-bottom: 2rem; }
     .historia-text p { margin-bottom: 1.25rem; }
 
@@ -193,8 +194,7 @@
   <div class="container">
     <div class="historia-grid">
       <div class="historia-img">
-        <!-- REVISAR: añadir foto del estudio o equipo -->
-        <span>Foto del estudio / equipo</span>
+        <img src="assets/proj-rehabilitacion_portada6.jpg" alt="Proyecto realizado por Gausark S.L.P. en Donostia" loading="lazy">
       </div>
       <div class="historia-text">
         <p class="label">Nuestra historia</p>
