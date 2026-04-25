@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servicios de arquitectura — Obra nueva, reformas y rehabilitación | Gausark S.L.P.</title>
+  <meta name="description" content="Servicios de Gausark S.L.P. en Donostia: obra nueva, reformas integrales, rehabilitación de fachadas e ITE. Más de 40 años de experiencia en Gipuzkoa.">
+  <meta name="keywords" content="obra nueva Donostia, reformas Gipuzkoa, rehabilitación edificios, ITE, dirección de obra">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://gausarkpremiumweb.vercel.app/servicios.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="Gausark S.L.P.">
+  <meta property="og:title" content="Servicios — Obra nueva, reformas y rehabilitación | Gausark">
+  <meta property="og:description" content="Servicios técnicos profesionales de arquitectura en Donostia y Gipuzkoa.">
+  <meta property="og:url" content="https://gausarkpremiumweb.vercel.app/servicios.html">
+  <meta property="og:image" content="https://gausarkpremiumweb.vercel.app/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Servicios — Gausark S.L.P.">
+  <meta name="twitter:description" content="Obra nueva, reformas y rehabilitación en Donostia.">
+  <meta name="twitter:image" content="https://gausarkpremiumweb.vercel.app/assets/og-image.jpg">
+
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Servicios de Gausark S.L.P.",
+    "itemListElement": [
+      {
+        "@type": "Service",
+        "position": 1,
+        "name": "Obra Nueva",
+        "description": "Proyectos de edificación de viviendas y edificios residenciales o terciarios.",
+        "provider": { "@type": "ProfessionalService", "name": "Gausark S.L.P.", "url": "https://gausarkpremiumweb.vercel.app/" }
+      },
+      {
+        "@type": "Service",
+        "position": 2,
+        "name": "Reformas",
+        "description": "Reforma integral y parcial de viviendas, locales y edificios.",
+        "provider": { "@type": "ProfessionalService", "name": "Gausark S.L.P.", "url": "https://gausarkpremiumweb.vercel.app/" }
+      },
+      {
+        "@type": "Service",
+        "position": 3,
+        "name": "Rehabilitación",
+        "description": "Recuperación y puesta en valor de edificios existentes.",
+        "provider": { "@type": "ProfessionalService", "name": "Gausark S.L.P.", "url": "https://gausarkpremiumweb.vercel.app/" }
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--color-dark); background: var(--color-white); line-height: 1.6; }
+    img { max-width: 100%; height: auto; display: block; }
+    ul { list-style: none; }
+    a { text-decoration: none; color: inherit; }
+
+    :root {
+      --color-dark: #1c1c1c;
+      --color-mid: #666;
+      --color-light: #f5f4f1;
+      --color-white: #fff;
+      --color-accent: #b8925a;
+      --color-border: #e2e0dc;
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'Nunito', sans-serif;
+      --max-w: 1200px;
+    }
+
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 80px; display: flex; align-items: center; padding: 0 2rem; background: rgba(28,28,28,.97); }
+    .header-inner { max-width: var(--max-w); width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .logo img { height: 38px; width: auto; filter: brightness(0) invert(1); }
+    nav ul { display: flex; gap: 2.5rem; }
+    nav a { font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.75); transition: color .2s; }
+    nav a:hover, nav a.active { color: #fff; }
+    .header-tel { font-size: .82rem; font-weight: 700; color: var(--color-accent); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; }
+    .mobile-nav { display: none; position: fixed; inset: 0; background: var(--color-dark); z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem; }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { font-family: var(--font-display); font-size: 2.2rem; font-weight: 300; color: #fff; }
+    .mobile-close { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; color: #fff; cursor: pointer; background: none; border: none; }
+
+    /* PAGE HERO */
+    .page-hero { padding: 160px 2rem 100px; background: var(--color-dark); color: #fff; }
+    .page-hero-inner { max-width: var(--max-w); margin: 0 auto; }
+    .label { font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 1rem; }
+    .title { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; line-height: 1.1; }
+
+    section { padding: 100px 2rem; }
+    .container { max-width: var(--max-w); margin: 0 auto; }
+    .body-text { font-size: 1rem; font-weight: 300; color: var(--color-mid); line-height: 1.8; max-width: 640px; }
+
+    /* SERVICIOS DETALLADOS */
+    .servicio-detalle { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; padding: 80px 2rem; border-bottom: 1px solid var(--color-border); }
+    .servicio-detalle:last-child { border-bottom: none; }
+    .servicio-detalle.reverse { direction: rtl; }
+    .servicio-detalle.reverse > * { direction: ltr; }
+    .servicio-detalle-img { aspect-ratio: 4/3; background: var(--color-light); overflow: hidden; }
+    .servicio-detalle-img img { width: 100%; height: 100%; object-fit: cover; }
+    .servicio-detalle-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--color-mid); font-size: .85rem; letter-spacing: .1em; }
+    .servicio-num { font-family: var(--font-display); font-size: 5rem; font-weight: 300; color: var(--color-accent); opacity: .2; line-height: 1; margin-bottom: .5rem; }
+    .servicio-detalle h2 { font-family: var(--font-display); font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 400; margin-bottom: 1.25rem; line-height: 1.2; }
+    .servicio-detalle p { font-size: .95rem; color: var(--color-mid); line-height: 1.8; margin-bottom: 1rem; }
+    .servicio-lista { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
+    .servicio-lista li { font-size: .9rem; color: var(--color-mid); padding-left: 1.25rem; position: relative; }
+    .servicio-lista li::before { content: '—'; position: absolute; left: 0; color: var(--color-accent); }
+
+    /* CTA */
+    .cta-final { background: var(--color-accent); text-align: center; color: #fff; }
+    .cta-final .title { color: #fff; }
+    .cta-final .body-text { color: rgba(255,255,255,.82); margin: 0 auto 2.5rem; }
+    .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-white { display: inline-block; padding: .85rem 2.25rem; background: #fff; color: var(--color-accent); font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; transition: background .25s; }
+    .btn-white:hover { background: rgba(255,255,255,.9); }
+    .btn-outline-w { display: inline-block; padding: .85rem 2.25rem; border: 1px solid rgba(255,255,255,.6); color: #fff; font-size: .82rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; transition: border-color .25s; }
+    .btn-outline-w:hover { border-color: #fff; background: rgba(255,255,255,.1); }
+
+    footer { background: #111; color: rgba(255,255,255,.55); padding: 80px 2rem 40px; }
+    .footer-inner { max-width: var(--max-w); margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,.07); margin-bottom: 2rem; }
+    .footer-logo { height: 34px; filter: brightness(0) invert(1); opacity: .6; margin-bottom: 1.25rem; }
+    .footer-desc { font-size: .875rem; line-height: 1.8; max-width: 260px; }
+    .footer-col h4 { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: #fff; margin-bottom: 1.25rem; }
+    .footer-col li { margin-bottom: .55rem; }
+    .footer-col a { font-size: .875rem; color: rgba(255,255,255,.45); transition: color .2s; }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: .78rem; flex-wrap: wrap; gap: 1rem; }
+    .footer-social a { margin-left: 1.25rem; color: rgba(255,255,255,.4); transition: color .2s; }
+    .footer-social a:hover { color: #fff; }
+
+    @media (max-width: 1024px) { .footer-grid { grid-template-columns: 1fr 1fr; } .servicio-detalle { grid-template-columns: 1fr; gap: 2.5rem; } .servicio-detalle.reverse { direction: ltr; } }
+    @media (max-width: 768px) { nav, .header-tel { display: none; } .hamburger { display: flex; } .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+    @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Gausark S.L.P."></a>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="servicios.html" class="active">Servicios</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+    <a href="tel:943440752" class="header-tel">943 44 07 52</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-close" id="mobileClose">✕</button>
+  <a href="index.html">Inicio</a>
+  <a href="servicios.html">Servicios</a>
+  <a href="nosotros.html">Nosotros</a>
+  <a href="contacto.html">Contacto</a>
+  <a href="tel:943440752" style="color:var(--color-accent);font-family:var(--font-body);font-size:1.1rem;">943 44 07 52</a>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="label">Lo que hacemos</p>
+    <h1 class="title">Nuestros servicios<br>de arquitectura</h1>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="servicio-detalle">
+    <div class="servicio-detalle-img">
+      <!-- REVISAR: añadir foto real de proyecto de obra nueva -->
+      <div class="servicio-detalle-img-placeholder">Foto proyecto — obra nueva</div>
+    </div>
+    <div>
+      <div class="servicio-num">01</div>
+      <h2>Obra Nueva</h2>
+      <p>Diseño y dirección de proyectos de edificación desde cero. Trabajamos con promotores y particulares en viviendas unifamiliares, edificios plurifamiliares y proyectos de uso terciario.</p>
+      <p>Nos encargamos de todo el proceso: proyecto básico y ejecutivo, licencias, dirección de obra y coordinación de seguridad.</p>
+      <ul class="servicio-lista">
+        <li>Proyecto básico y ejecutivo</li>
+        <li>Tramitación de licencias urbanísticas</li>
+        <li>Dirección facultativa de obra</li>
+        <li>Coordinación de seguridad y salud</li>
+        <!-- REVISAR: confirmar lista completa de prestaciones en obra nueva -->
+      </ul>
+    </div>
+  </div>
+
+  <div class="servicio-detalle reverse">
+    <div class="servicio-detalle-img">
+      <!-- REVISAR: añadir foto real de proyecto de reforma -->
+      <div class="servicio-detalle-img-placeholder">Foto proyecto — reforma</div>
+    </div>
+    <div>
+      <div class="servicio-num">02</div>
+      <h2>Reformas</h2>
+      <p>Reforma integral y parcial de viviendas, locales comerciales y edificios. Aportamos soluciones técnicas y estéticas que mejoran la funcionalidad y el valor del inmueble.</p>
+      <p>Desde una reforma de cocina o baño hasta la transformación completa de un espacio, gestionamos el proyecto de principio a fin.</p>
+      <ul class="servicio-lista">
+        <li>Reforma integral de vivienda</li>
+        <li>Reforma de locales y oficinas</li>
+        <li>Adecuación para cambio de uso</li>
+        <li>Proyectos de interiorismo</li>
+        <!-- REVISAR: confirmar lista completa de prestaciones en reformas -->
+      </ul>
+    </div>
+  </div>
+
+  <div class="servicio-detalle">
+    <div class="servicio-detalle-img">
+      <!-- REVISAR: añadir foto real de proyecto de rehabilitación -->
+      <div class="servicio-detalle-img-placeholder">Foto proyecto — rehabilitación</div>
+    </div>
+    <div>
+      <div class="servicio-num">03</div>
+      <h2>Rehabilitación</h2>
+      <p>Recuperación y puesta en valor de edificios existentes. Trabajamos la envolvente, la estructura y los sistemas para prolongar la vida útil del edificio y mejorar su comportamiento energético.</p>
+      <p>Especialistas en rehabilitación de fachadas, cubiertas y elementos comunes en comunidades de propietarios.</p>
+      <ul class="servicio-lista">
+        <li>Rehabilitación de fachadas y cubiertas</li>
+        <li>Mejora de la eficiencia energética</li>
+        <li>Refuerzo y consolidación estructural</li>
+        <li>ITE — Inspección Técnica de Edificios</li>
+        <!-- REVISAR: confirmar lista completa de prestaciones en rehabilitación -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- REVISAR: confirmar si existen más servicios (consultoría, diseño interior, topografía, gestión de comunidades, etc.) -->
+
+</div>
+
+<section class="cta-final">
+  <div class="container">
+    <p class="label" style="color:rgba(255,255,255,.6);">¿Tiene un proyecto?</p>
+    <h2 class="title">Hablemos de su idea</h2>
+    <p class="body-text">Cuéntenos su proyecto y le orientamos sin compromiso. Atendemos en Donostia y trabajamos en toda Gipuzkoa.</p>
+    <div class="cta-btns">
+      <a href="contacto.html" class="btn-white">Solicitar presupuesto</a>
+      <a href="tel:943440752" class="btn-outline-w">943 44 07 52</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <img src="assets/logo.png" alt="Gausark S.L.P." class="footer-logo">
+        <p class="footer-desc">GAUSARK S.L.P. es una empresa de gestión y servicios técnicos profesionales de arquitectura y diseño con más de 40 años de experiencia.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="servicios.html">Servicios</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="mailto:gausarksl@gausark.es">gausarksl@gausark.es</a></li>
+          <li><a href="tel:943440752">943 44 07 52</a></li>
+          <li style="font-size:.85rem;line-height:1.7;color:rgba(255,255,255,.4);">Txapillo Kalea, 3, bajo izq<br>20009 Donostia, Gipuzkoa</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="aviso-legal.html">Aviso legal</a></li>
+          <li><a href="politica-privacidad.html">Política de privacidad</a></li>
+          <li><a href="politica-cookies.html">Política de cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© Gausark S.L.P. · Todos los derechos reservados</span>
+      <div class="footer-social"><a href="https://www.instagram.com/gausarksl/" target="_blank" rel="noopener">Instagram</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  const mobileClose = document.getElementById('mobileClose');
+  hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
+  mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel/
+
+# Logs
+*.log
+
+# Tooling artefacts
+.claude/scripts/screenshots/
+.claude/scripts/__pycache__/
+
+# Original heavy video (use hero-scrub.mp4 in production)
+assets/hero.mp4

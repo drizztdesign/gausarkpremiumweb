@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gausark S.L.P. — Arquitectura y Diseño en Donostia | +40 años</title>
+  <meta name="description" content="Estudio de arquitectura y diseño en Donostia con más de 40 años de experiencia. Obra nueva, reformas y rehabilitación en Gipuzkoa. Solicite presupuesto sin compromiso.">
+  <meta name="keywords" content="arquitectura Donostia, arquitectos San Sebastián, reformas Gipuzkoa, rehabilitación edificios, obra nueva, Gausark">
+  <meta name="author" content="Gausark S.L.P.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://gausarkpremiumweb.vercel.app/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="Gausark S.L.P.">
+  <meta property="og:title" content="Gausark S.L.P. — Arquitectura y Diseño en Donostia">
+  <meta property="og:description" content="Estudio de arquitectura y diseño en Donostia con más de 40 años de experiencia. Obra nueva, reformas y rehabilitación en Gipuzkoa.">
+  <meta property="og:url" content="https://gausarkpremiumweb.vercel.app/">
+  <meta property="og:image" content="https://gausarkpremiumweb.vercel.app/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gausark S.L.P. — Arquitectura y Diseño en Donostia">
+  <meta name="twitter:description" content="Estudio de arquitectura y diseño en Donostia con más de 40 años de experiencia.">
+  <meta name="twitter:image" content="https://gausarkpremiumweb.vercel.app/assets/og-image.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://gausarkpremiumweb.vercel.app/#organization",
+        "name": "Gausark S.L.P.",
+        "alternateName": "Gausark Arquitectura",
+        "description": "Empresa de gestión y servicios técnicos profesionales de arquitectura y diseño con más de 40 años de experiencia.",
+        "url": "https://gausarkpremiumweb.vercel.app/",
+        "logo": "https://gausarkpremiumweb.vercel.app/assets/logo.png",
+        "image": "https://gausarkpremiumweb.vercel.app/assets/og-image.jpg",
+        "telephone": "+34943440752",
+        "email": "gausarksl@gausark.es",
+        "priceRange": "€€",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Txapillo Kalea, 3, bajo izq",
+          "addressLocality": "Donostia-San Sebastián",
+          "postalCode": "20009",
+          "addressRegion": "Gipuzkoa",
+          "addressCountry": "ES"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 43.3169,
+          "longitude": -1.9869
+        },
+        "areaServed": {
+          "@type": "AdministrativeArea",
+          "name": "Gipuzkoa"
+        },
+        "sameAs": [
+          "https://www.instagram.com/gausarksl/"
+        ],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Servicios de arquitectura",
+          "itemListElement": [
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Obra Nueva" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Reformas" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Rehabilitación" } }
+          ]
+        },
+        "foundingDate": "1980"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://gausarkpremiumweb.vercel.app/#website",
+        "url": "https://gausarkpremiumweb.vercel.app/",
+        "name": "Gausark S.L.P.",
+        "publisher": { "@id": "https://gausarkpremiumweb.vercel.app/#organization" },
+        "inLanguage": "es-ES"
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--color-dark); background: var(--color-white); line-height: 1.6; }
+    img { max-width: 100%; height: auto; display: block; }
+    ul { list-style: none; }
+    a { text-decoration: none; color: inherit; }
+
+    :root {
+      --color-dark: #1c1c1c;
+      --color-mid: #666;
+      --color-light: #f5f4f1;
+      --color-white: #fff;
+      --color-accent: #b8925a;
+      --color-border: #e2e0dc;
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'Nunito', sans-serif;
+      --max-w: 1200px;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 80px; display: flex; align-items: center; padding: 0 2rem;
+      background: rgba(28,28,28,0.82); backdrop-filter: blur(10px);
+      transition: background .3s;
+    }
+    header.scrolled { background: rgba(28,28,28,0.97); }
+    .header-inner { max-width: var(--max-w); width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .logo img { height: 38px; width: auto; filter: brightness(0) invert(1); }
+    nav ul { display: flex; gap: 2.5rem; }
+    nav a { font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.75); transition: color .2s; }
+    nav a:hover, nav a.active { color: #fff; }
+    .header-tel { font-size: .82rem; font-weight: 700; color: var(--color-accent); letter-spacing: .05em; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; transition: all .3s; }
+
+    /* MOBILE NAV */
+    .mobile-nav {
+      display: none; position: fixed; inset: 0; background: var(--color-dark); z-index: 200;
+      flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { font-family: var(--font-display); font-size: 2.2rem; font-weight: 300; color: #fff; letter-spacing: .05em; }
+    .mobile-close { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; color: #fff; cursor: pointer; background: none; border: none; }
+
+    /* HERO */
+    .hero { position: relative; height: 100vh; min-height: 600px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #1c1c1c; }
+    .scroll-video-wrapper { height: 175vh; }
+    .scroll-video-wrapper .hero { position: sticky; top: 0; height: 100vh; }
+    .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.58); }
+    .hero-content { position: relative; z-index: 2; text-align: center; color: #fff; padding: 0 1.5rem; max-width: 780px; }
+    .hero-eyebrow { font-size: .78rem; letter-spacing: .28em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 1.25rem; }
+    .hero h1 { font-family: var(--font-display); font-size: clamp(3.5rem, 9vw, 6.5rem); font-weight: 300; letter-spacing: .04em; line-height: 1.0; margin-bottom: 1.25rem; }
+    .hero-sub { font-size: 1rem; font-weight: 300; letter-spacing: .06em; color: rgba(255,255,255,.72); margin-bottom: 2.75rem; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { display: inline-block; padding: .85rem 2.25rem; background: var(--color-accent); color: #fff; font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; transition: background .25s, transform .2s; }
+    .btn-primary:hover { background: #a07848; transform: translateY(-2px); }
+    .btn-outline { display: inline-block; padding: .85rem 2.25rem; border: 1px solid rgba(255,255,255,.5); color: #fff; font-size: .82rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; transition: border-color .25s, background .25s; }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,.08); }
+    .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: .5rem; color: rgba(255,255,255,.45); font-size: .68rem; letter-spacing: .18em; text-transform: uppercase; }
+    .scroll-line { width: 1px; height: 50px; background: rgba(255,255,255,.3); animation: sl 1.8s ease-in-out infinite; }
+    @keyframes sl { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform:scaleY(1);transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
+
+    /* SECTIONS */
+    section { padding: 100px 2rem; }
+    .container { max-width: var(--max-w); margin: 0 auto; }
+    .label { font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 1rem; }
+    .title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; line-height: 1.15; margin-bottom: 1.5rem; }
+    .body-text { font-size: 1rem; font-weight: 300; color: var(--color-mid); line-height: 1.8; max-width: 580px; }
+
+    /* POR QUÉ */
+    .porque { background: var(--color-light); }
+    .porque-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 4rem; }
+    .porque-item { padding: 2.5rem 2rem; background: #fff; border-top: 2px solid var(--color-accent); }
+    .porque-num { font-family: var(--font-display); font-size: 3rem; font-weight: 300; color: var(--color-accent); opacity: .35; line-height: 1; margin-bottom: 1rem; }
+    .porque-item h3 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 400; margin-bottom: .75rem; }
+    .porque-item p { font-size: .9rem; color: var(--color-mid); line-height: 1.75; }
+
+    /* SERVICIOS */
+    .servicios-header { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; margin-bottom: 4rem; }
+    .servicios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5px; background: var(--color-border); }
+    .servicio-card { background: #fff; padding: 2.75rem 2rem; transition: background .25s; }
+    .servicio-card:hover { background: var(--color-light); }
+    .s-line { width: 40px; height: 2px; background: var(--color-accent); margin-bottom: 1.5rem; }
+    .servicio-card h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 400; margin-bottom: .75rem; }
+    .servicio-card p { font-size: .9rem; color: var(--color-mid); line-height: 1.75; }
+    .servicio-card a { display: inline-block; margin-top: 1.25rem; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--color-accent); border-bottom: 1px solid transparent; transition: border-color .2s; }
+    .servicio-card a:hover { border-color: var(--color-accent); }
+
+    /* NÚMEROS */
+    .numeros { background: var(--color-dark); color: #fff; }
+    .numeros-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; text-align: center; margin-top: 4rem; }
+    .num-val { font-family: var(--font-display); font-size: clamp(3.5rem, 6vw, 5rem); font-weight: 300; color: var(--color-accent); line-height: 1; }
+    .num-label { font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-top: .75rem; }
+
+    /* CTA FINAL */
+    .cta-final { background: var(--color-accent); text-align: center; color: #fff; }
+    .cta-final .title { color: #fff; }
+    .cta-final .body-text { color: rgba(255,255,255,.82); margin: 0 auto 2.5rem; }
+    .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-white { display: inline-block; padding: .85rem 2.25rem; background: #fff; color: var(--color-accent); font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; transition: background .25s; }
+    .btn-white:hover { background: rgba(255,255,255,.9); }
+    .btn-outline-w { display: inline-block; padding: .85rem 2.25rem; border: 1px solid rgba(255,255,255,.6); color: #fff; font-size: .82rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; transition: border-color .25s, background .25s; }
+    .btn-outline-w:hover { border-color: #fff; background: rgba(255,255,255,.1); }
+
+    /* FOOTER */
+    footer { background: #111; color: rgba(255,255,255,.55); padding: 80px 2rem 40px; }
+    .footer-inner { max-width: var(--max-w); margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,.07); margin-bottom: 2rem; }
+    .footer-logo { height: 34px; filter: brightness(0) invert(1); opacity: .6; margin-bottom: 1.25rem; }
+    .footer-desc { font-size: .875rem; line-height: 1.8; max-width: 260px; }
+    .footer-col h4 { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: #fff; margin-bottom: 1.25rem; }
+    .footer-col li { margin-bottom: .55rem; }
+    .footer-col a { font-size: .875rem; color: rgba(255,255,255,.45); transition: color .2s; }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: .78rem; flex-wrap: wrap; gap: 1rem; }
+    .footer-social a { margin-left: 1.25rem; color: rgba(255,255,255,.4); transition: color .2s; }
+    .footer-social a:hover { color: #fff; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .servicios-header { grid-template-columns: 1fr; gap: 2rem; }
+    }
+    @media (max-width: 768px) {
+      section { padding: 80px 1.25rem; }
+      nav, .header-tel { display: none; }
+      .hamburger { display: flex; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .hero-btns { flex-direction: column; align-items: center; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .numeros-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Gausark S.L.P."></a>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="active">Inicio</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+    <a href="tel:943440752" class="header-tel">943 44 07 52</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-close" id="mobileClose">✕</button>
+  <a href="index.html">Inicio</a>
+  <a href="servicios.html">Servicios</a>
+  <a href="nosotros.html">Nosotros</a>
+  <a href="contacto.html">Contacto</a>
+  <a href="tel:943440752" style="color:var(--color-accent);font-family:var(--font-body);font-size:1.1rem;letter-spacing:.05em;">943 44 07 52</a>
+</div>
+
+<!-- SCROLL-VIDEO-SECTION -->
+<div class="scroll-video-wrapper">
+<section class="hero">
+  <video id="heroVideo" muted playsinline preload="auto">
+    <source src="assets/hero-scrub.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Arquitectura y Diseño · Donostia · Gipuzkoa</p>
+    <h1>Gausark<br>S.L.P.</h1>
+    <p class="hero-sub">Más de 40 años de experiencia en arquitectura, edificación y rehabilitación</p>
+    <div class="hero-btns">
+      <a href="contacto.html" class="btn-primary">Solicitar presupuesto</a>
+      <a href="tel:943440752" class="btn-outline">943 44 07 52</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+</div>
+
+<section class="porque">
+  <div class="container">
+    <p class="label">Por qué elegirnos</p>
+    <h2 class="title">Décadas de experiencia<br>a su servicio</h2>
+    <div class="porque-grid">
+      <div class="porque-item">
+        <div class="porque-num">01</div>
+        <h3>Más de 40 años de experiencia</h3>
+        <p>Una trayectoria consolidada en el sector de la arquitectura y el diseño técnico profesional en Gipuzkoa y el País Vasco.</p>
+      </div>
+      <div class="porque-item">
+        <div class="porque-num">02</div>
+        <h3>Gestión técnica integral</h3>
+        <p>Acompañamos cada proyecto desde el diseño inicial hasta la entrega final, coordinando todos los aspectos técnicos y administrativos.</p>
+      </div>
+      <div class="porque-item">
+        <div class="porque-num">03</div>
+        <h3>Estudio profesional S.L.P.</h3>
+        <p>Sociedad de profesionales acreditados con responsabilidad directa en cada proyecto. Rigor, compromiso y calidad garantizada.</p>
+      </div>
+      <div class="porque-item">
+        <div class="porque-num">04</div>
+        <!-- REVISAR: confirmar si el equipo incluye arquitectos, aparejadores, ingenieros u otros perfiles -->
+        <h3>Equipo multidisciplinar</h3>
+        <p>Profesionales especializados en arquitectura, edificación y rehabilitación para dar respuesta a proyectos de cualquier escala y uso.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="servicios">
+  <div class="container">
+    <div class="servicios-header">
+      <div>
+        <p class="label">Nuestros servicios</p>
+        <h2 class="title">Arquitectura y diseño<br>a medida</h2>
+      </div>
+      <p class="body-text">Ofrecemos servicios técnicos profesionales de arquitectura y diseño para particulares, empresas y administraciones en Donostia y Gipuzkoa.</p>
+    </div>
+    <div class="servicios-grid">
+      <div class="servicio-card">
+        <div class="s-line"></div>
+        <h3>Obra Nueva</h3>
+        <p>Proyectos de edificación de viviendas unifamiliares y edificios residenciales o terciarios, desde el diseño hasta la dirección de obra.</p>
+        <a href="servicios.html">Ver más →</a>
+      </div>
+      <div class="servicio-card">
+        <div class="s-line"></div>
+        <h3>Reformas</h3>
+        <p>Reforma integral y parcial de viviendas, locales y edificios. Soluciones funcionales y estéticas adaptadas a cada necesidad.</p>
+        <a href="servicios.html">Ver más →</a>
+      </div>
+      <div class="servicio-card">
+        <div class="s-line"></div>
+        <h3>Rehabilitación</h3>
+        <p>Recuperación y puesta en valor de edificios existentes, mejorando la eficiencia energética, la estructura y la imagen exterior.</p>
+        <a href="servicios.html">Ver más →</a>
+      </div>
+      <!-- REVISAR: confirmar servicios adicionales: diseño interior, consultoría, ITE, certificaciones energéticas -->
+    </div>
+  </div>
+</section>
+
+<section class="numeros">
+  <div class="container">
+    <p class="label">En números</p>
+    <h2 class="title" style="color:#fff;">La confianza que<br>avala nuestro trabajo</h2>
+    <div class="numeros-grid">
+      <div>
+        <div class="num-val">+40</div>
+        <p class="num-label">Años de experiencia</p>
+      </div>
+      <div>
+        <!-- REVISAR: añadir número real de proyectos realizados -->
+        <div class="num-val">+<!--REVISAR-->???</div>
+        <p class="num-label">Proyectos realizados</p>
+      </div>
+      <div>
+        <!-- REVISAR: confirmar zonas de actuación dentro de Gipuzkoa -->
+        <div class="num-val">GI</div>
+        <p class="num-label">Gipuzkoa y alrededores</p>
+      </div>
+      <div>
+        <!-- REVISAR: añadir dato adicional de confianza real -->
+        <div class="num-val">1980</div>
+        <p class="num-label">Fundación del estudio</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final">
+  <div class="container">
+    <p class="label" style="color:rgba(255,255,255,.6);">¿Hablamos?</p>
+    <h2 class="title">Cuéntenos su proyecto</h2>
+    <p class="body-text">Estamos en Donostia y trabajamos en toda Gipuzkoa. Consúltenos sin compromiso — le respondemos en 24 horas.</p>
+    <div class="cta-btns">
+      <a href="contacto.html" class="btn-white">Solicitar presupuesto</a>
+      <a href="tel:943440752" class="btn-outline-w">943 44 07 52</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <img src="assets/logo.png" alt="Gausark S.L.P." class="footer-logo">
+        <p class="footer-desc">GAUSARK S.L.P. es una empresa de gestión y servicios técnicos profesionales de arquitectura y diseño con más de 40 años de experiencia.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="servicios.html">Servicios</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="mailto:gausarksl@gausark.es">gausarksl@gausark.es</a></li>
+          <li><a href="tel:943440752">943 44 07 52</a></li>
+          <li style="font-size:.85rem;line-height:1.7;color:rgba(255,255,255,.4);">Txapillo Kalea, 3, bajo izq<br>20009 Donostia, Gipuzkoa</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="aviso-legal.html">Aviso legal</a></li>
+          <li><a href="politica-privacidad.html">Política de privacidad</a></li>
+          <li><a href="politica-cookies.html">Política de cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© Gausark S.L.P. · Todos los derechos reservados</span>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/gausarksl/" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Header scroll effect
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 60), { passive: true });
+
+  // Scroll-driven video: play forward on scroll, reverse on scroll up, locked until end
+  (function () {
+    var video   = document.getElementById('heroVideo');
+    var wrapper = document.querySelector('.scroll-video-wrapper');
+    if (!video || !wrapper) return;
+
+    var complete   = false;
+    var rafId      = null;
+    var lastUpdate = 0;
+    var THROTTLE   = 50; // ms — reduce decoder pressure
+
+    function wrapTop() { return wrapper.getBoundingClientRect().top + window.scrollY; }
+    function range()   { return wrapper.offsetHeight - window.innerHeight; }
+
+    function targetTime() {
+      if (!video.duration) return 0;
+      var scrolled = Math.max(0, window.scrollY - wrapTop());
+      return Math.min(1, scrolled / range()) * video.duration;
+    }
+
+    function setVideoTime(t) {
+      if (video.fastSeek) video.fastSeek(t);
+      else video.currentTime = t;
+    }
+
+    function tick(now) {
+      if (!video.duration) { rafId = null; return; }
+      if (now - lastUpdate < THROTTLE) {
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+      var target  = targetTime();
+      var current = video.currentTime;
+      var diff    = target - current;
+
+      if (Math.abs(diff) < 0.04) {
+        setVideoTime(target);
+        if (target >= video.duration - 0.2) complete = true;
+        rafId = null;
+        return;
+      }
+      // Lerp grande (0.4) compensa el throttling — mantiene tracking del scroll
+      setVideoTime(current + diff * 0.4);
+      lastUpdate = now;
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function onScroll() {
+      if (!video.duration) return;
+      if (!rafId) rafId = requestAnimationFrame(tick);
+    }
+
+    // Bloquear solo al intentar pasar el final del wrapper con el vídeo sin terminar
+    window.addEventListener('wheel', function (e) {
+      if (complete || !video.duration || e.deltaY <= 0) return;
+      var wrapperEnd = wrapTop() + range();
+      if (window.scrollY + e.deltaY > wrapperEnd && video.currentTime < video.duration - 0.3) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    video.addEventListener('loadedmetadata', function () { onScroll(); });
+    video.addEventListener('ended', function () { complete = true; });
+  }());
+
+  const heroVideo = document.getElementById('heroVideo');
+
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  const mobileClose = document.getElementById('mobileClose');
+  hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
+  mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+</script>
+</body>
+</html>
