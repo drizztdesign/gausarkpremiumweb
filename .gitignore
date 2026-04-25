@@ -17,3 +17,5 @@ Thumbs.db
 
 # Original heavy video (use hero-scrub.mp4 in production)
 assets/hero.mp4
+
+.vercel
