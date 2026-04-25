@@ -263,7 +263,7 @@
 <!-- SCROLL-VIDEO-SECTION -->
 <div class="scroll-video-wrapper">
 <section class="hero">
-  <video id="heroVideo" muted playsinline preload="auto">
+  <video id="heroVideo" muted playsinline preload="auto" poster="assets/og-image.jpg">
     <source src="assets/hero-scrub-mobile.mp4" type="video/mp4" media="(max-width: 768px)">
     <source src="assets/hero-scrub.mp4" type="video/mp4">
   </video>
@@ -512,7 +512,13 @@
 
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    video.addEventListener('loadedmetadata', function () { onScroll(); });
+    // Force first frame decode (iOS Safari no renderiza frame 0 sin un seek)
+    video.addEventListener('loadedmetadata', function () {
+      video.currentTime = 0.001;
+      onScroll();
+    });
+    // Reintento por si loadedmetadata ya pasó cuando se enganchó el listener
+    if (video.readyState >= 1) { video.currentTime = 0.001; onScroll(); }
     video.addEventListener('ended', function () { complete = true; });
   }());
 
