@@ -41,7 +41,10 @@ avanza rápido. Si el target está cerca (scroll lento), avanza suave.
 <div class="scroll-video-wrapper">
   <section class="hero">
     <video id="heroVideo" muted playsinline preload="auto">
-      <source src="assets/hero.mp4" type="video/mp4">
+      <!-- Móvil: 720p liviano (~5MB) -->
+      <source src="assets/hero-scrub-mobile.mp4" type="video/mp4" media="(max-width: 768px)">
+      <!-- Desktop: full quality -->
+      <source src="assets/hero-scrub.mp4" type="video/mp4">
     </video>
     <!-- resto del hero -->
   </section>
@@ -49,6 +52,15 @@ avanza rápido. Si el target está cerca (scroll lento), avanza suave.
 ```
 
 Sin `autoplay` ni `loop`.
+
+**Generar la versión móvil con FFmpeg:**
+```bash
+ffmpeg -i hero.mp4 \
+  -c:v libx264 -x264opts "keyint=1:min-keyint=1:no-scenecut" \
+  -crf 22 -preset slow -tune film \
+  -vf "scale=1280:-2" -an -movflags +faststart \
+  -y hero-scrub-mobile.mp4
+```
 
 ---
 
@@ -122,11 +134,26 @@ Sin `autoplay` ni `loop`.
     }, 150);
   }
 
-  // Bloquear solo al intentar pasar el final del wrapper con el vídeo sin terminar
+  // Bloquear scroll desktop (wheel) si el vídeo no ha terminado
   window.addEventListener('wheel', function (e) {
     if (complete || !video.duration || e.deltaY <= 0) return;
     var wrapperEnd = wrapTop() + range();
     if (window.scrollY + e.deltaY > wrapperEnd && video.currentTime < video.duration - 0.3) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // Bloquear scroll móvil (touch) — sin esto, en móvil el wrapper no se respeta
+  var touchStartY = 0;
+  window.addEventListener('touchstart', function (e) {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  window.addEventListener('touchmove', function (e) {
+    if (complete || !video.duration) return;
+    var dy = touchStartY - e.touches[0].clientY;
+    if (dy <= 0) return;
+    var wrapperEnd = wrapTop() + range();
+    if (window.scrollY + dy > wrapperEnd && video.currentTime < video.duration - 0.3) {
       e.preventDefault();
     }
   }, { passive: false });

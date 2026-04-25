@@ -264,6 +264,7 @@
 <div class="scroll-video-wrapper">
 <section class="hero">
   <video id="heroVideo" muted playsinline preload="auto">
+    <source src="assets/hero-scrub-mobile.mp4" type="video/mp4" media="(max-width: 768px)">
     <source src="assets/hero-scrub.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
@@ -485,11 +486,26 @@
       if (!rafId) rafId = requestAnimationFrame(tick);
     }
 
-    // Bloquear solo al intentar pasar el final del wrapper con el vídeo sin terminar
+    // Bloquear scroll desktop (wheel) si el vídeo no ha terminado
     window.addEventListener('wheel', function (e) {
       if (complete || !video.duration || e.deltaY <= 0) return;
       var wrapperEnd = wrapTop() + range();
       if (window.scrollY + e.deltaY > wrapperEnd && video.currentTime < video.duration - 0.3) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    // Bloquear scroll móvil (touch) — análogo al wheel pero con dy de touch
+    var touchStartY = 0;
+    window.addEventListener('touchstart', function (e) {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (complete || !video.duration) return;
+      var dy = touchStartY - e.touches[0].clientY; // positivo = swipe hacia arriba = scroll abajo
+      if (dy <= 0) return;
+      var wrapperEnd = wrapTop() + range();
+      if (window.scrollY + dy > wrapperEnd && video.currentTime < video.duration - 0.3) {
         e.preventDefault();
       }
     }, { passive: false });
