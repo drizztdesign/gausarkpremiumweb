@@ -119,6 +119,20 @@
     .servicio-lista { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
     .servicio-lista li { font-size: .9rem; color: var(--color-mid); padding-left: 1.25rem; position: relative; }
     .servicio-lista li::before { content: '—'; position: absolute; left: 0; color: var(--color-accent); }
+    .servicio-cta {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: .85rem 2rem;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background .25s, transform .2s;
+    }
+    .servicio-cta:hover { background: #e08800; transform: translateY(-2px); }
 
     /* CTA */
     .cta-final { background: var(--color-accent); text-align: center; color: #fff; }
@@ -200,6 +214,7 @@
         <li>Coordinación de seguridad y salud</li>
         <!-- REVISAR: confirmar lista completa de prestaciones en obra nueva -->
       </ul>
+      <a href="contacto.html?servicio=obra-nueva" class="servicio-cta">Solicitar presupuesto →</a>
     </div>
   </div>
 
@@ -219,6 +234,7 @@
         <li>Proyectos de interiorismo</li>
         <!-- REVISAR: confirmar lista completa de prestaciones en reformas -->
       </ul>
+      <a href="contacto.html?servicio=reformas" class="servicio-cta">Solicitar presupuesto →</a>
     </div>
   </div>
 
@@ -238,6 +254,7 @@
         <li>ITE — Inspección Técnica de Edificios</li>
         <!-- REVISAR: confirmar lista completa de prestaciones en rehabilitación -->
       </ul>
+      <a href="contacto.html?servicio=rehabilitacion" class="servicio-cta">Solicitar presupuesto →</a>
     </div>
   </div>
 
