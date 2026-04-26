@@ -543,13 +543,14 @@
     var wrapper = document.querySelector('.scroll-video-wrapper');
     if (!video || !wrapper) return;
 
-    var complete   = false;
-    var rafId      = null;
-    var lastUpdate = 0;
-    var THROTTLE   = 50; // ms — reduce decoder pressure
+    // rAF lerp continuo (requiere vídeo encodado con keyint=1)
+    var complete = false;
+    var rafId    = null;
+    var current  = 0;
+    var LERP     = 0.18;
 
     function wrapTop() { return wrapper.getBoundingClientRect().top + window.scrollY; }
-    function range()   { return wrapper.offsetHeight - window.innerHeight; }
+    function range()   { return Math.max(1, wrapper.offsetHeight - window.innerHeight); }
 
     function targetTime() {
       if (!video.duration) return 0;
@@ -557,30 +558,20 @@
       return Math.min(1, scrolled / range()) * video.duration;
     }
 
-    function setVideoTime(t) {
-      if (video.fastSeek) video.fastSeek(t);
-      else video.currentTime = t;
-    }
-
-    function tick(now) {
+    function tick() {
       if (!video.duration) { rafId = null; return; }
-      if (now - lastUpdate < THROTTLE) {
-        rafId = requestAnimationFrame(tick);
-        return;
-      }
-      var target  = targetTime();
-      var current = video.currentTime;
-      var diff    = target - current;
-
-      if (Math.abs(diff) < 0.04) {
-        setVideoTime(target);
-        if (target >= video.duration - 0.2) complete = true;
+      var target = targetTime();
+      var diff   = target - current;
+      var k = Math.abs(diff) > 0.8 ? Math.min(0.5, LERP + Math.abs(diff) * 0.08) : LERP;
+      if (Math.abs(diff) < 0.003) {
+        current = target;
+        try { video.currentTime = current; } catch (_) {}
+        if (target >= video.duration - 0.1) complete = true;
         rafId = null;
         return;
       }
-      // Lerp grande (0.4) compensa el throttling — mantiene tracking del scroll
-      setVideoTime(current + diff * 0.4);
-      lastUpdate = now;
+      current += diff * k;
+      try { video.currentTime = current; } catch (_) {}
       rafId = requestAnimationFrame(tick);
     }
 
