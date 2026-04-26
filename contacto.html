@@ -247,38 +247,58 @@
 
       <div>
         <h2 class="form-title">Escríbanos</h2>
-        <!-- REVISAR: sustituir YOUR_FORM_ID por el ID real de Formspree (crear cuenta en formspree.io) -->
-        <form id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
+        <!-- ============================================================
+             FORMULARIO GOOGLE FORMS — instrucciones de setup
+             1. Crear un Google Form en forms.google.com con estos campos
+                (en este orden, mismos tipos):
+                · Nombre (texto, obligatorio)
+                · Teléfono (texto, opcional)
+                · Email (texto, obligatorio)
+                · Tipo de proyecto (desplegable: Obra nueva / Reforma /
+                                   Rehabilitación / Consulta general)
+                · Mensaje (párrafo, obligatorio)
+             2. En "Respuestas" → activar notificaciones por email a
+                gausarksl@gausark.es
+             3. Click en el botón ⋮ (3 puntos) → "Obtener vínculo prellenado"
+                Rellenar cada campo con texto único (ej. NOMBRE_X, TEL_X…)
+                y copiar el enlace que sale.
+             4. En la URL ves: ?entry.123=NOMBRE_X&entry.456=TEL_X&…
+                Sustituir abajo cada FORM_ENTRY_X por el número que toca.
+             5. Sustituir GOOGLE_FORM_ID por el ID que sale en la URL del
+                form (la parte entre /e/ y /viewform).
+             ============================================================ -->
+        <form id="contactForm"
+              action="https://docs.google.com/forms/d/e/GOOGLE_FORM_ID/formResponse"
+              method="POST" target="hidden_iframe" novalidate>
           <div class="form-row">
             <div class="form-group">
               <label for="nombre">Nombre *</label>
-              <input type="text" id="nombre" name="nombre" placeholder="Su nombre" required>
+              <input type="text" id="nombre" name="entry.FORM_ENTRY_NOMBRE" placeholder="Su nombre" required>
               <span class="field-error" id="err-nombre">Por favor, indique su nombre.</span>
             </div>
             <div class="form-group">
               <label for="telefono">Teléfono</label>
-              <input type="tel" id="telefono" name="telefono" placeholder="Su teléfono">
+              <input type="tel" id="telefono" name="entry.FORM_ENTRY_TELEFONO" placeholder="Su teléfono">
             </div>
           </div>
           <div class="form-group">
             <label for="email">Email *</label>
-            <input type="email" id="email" name="email" placeholder="su@email.com" required>
+            <input type="email" id="email" name="entry.FORM_ENTRY_EMAIL" placeholder="su@email.com" required>
             <span class="field-error" id="err-email">Por favor, introduzca un email válido.</span>
           </div>
           <div class="form-group">
             <label for="servicio">Tipo de proyecto</label>
-            <select id="servicio" name="servicio">
+            <select id="servicio" name="entry.FORM_ENTRY_SERVICIO">
               <option value="">— Seleccione un tipo —</option>
               <option>Obra nueva</option>
               <option>Reforma</option>
               <option>Rehabilitación</option>
               <option>Consulta general</option>
-              <!-- REVISAR: añadir más tipos de servicio si corresponde -->
             </select>
           </div>
           <div class="form-group">
             <label for="mensaje">Mensaje *</label>
-            <textarea id="mensaje" name="mensaje" placeholder="Cuéntenos su proyecto o consulta..." required></textarea>
+            <textarea id="mensaje" name="entry.FORM_ENTRY_MENSAJE" placeholder="Cuéntenos su proyecto o consulta..." required></textarea>
             <span class="field-error" id="err-mensaje">Por favor, escriba su mensaje.</span>
           </div>
           <p class="form-note">
@@ -290,9 +310,10 @@
             Mensaje enviado correctamente. Le responderemos en menos de 24 horas. ¡Gracias!
           </div>
           <div class="form-error-msg" id="formError">
-            Ha ocurrido un error al enviar el mensaje. Por favor, inténtelo de nuevo o llámenos al 943 44 07 52.
+            Ha ocurrido un error. Por favor, inténtelo de nuevo o llámenos al 943 44 07 52.
           </div>
         </form>
+        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none" title="Submit handler"></iframe>
       </div>
 
     </div>
@@ -347,11 +368,13 @@
   mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
   mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
 
+  // Submit a Google Forms vía iframe oculto (Google bloquea CORS en fetch)
   const form = document.getElementById('contactForm');
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    let valid = true;
+  const iframe = document.getElementById('hidden_iframe');
+  let submitting = false;
 
+  form.addEventListener('submit', (e) => {
+    let valid = true;
     ['nombre','email','mensaje'].forEach(id => {
       const el = document.getElementById(id);
       const err = document.getElementById('err-' + id);
@@ -359,25 +382,22 @@
         err.style.display = 'block'; valid = false;
       } else { err.style.display = 'none'; }
     });
-
-    if (!valid) return;
+    if (!valid) { e.preventDefault(); return; }
 
     const btn = form.querySelector('.btn-submit');
     btn.textContent = 'Enviando...';
     btn.disabled = true;
+    submitting = true;
+  });
 
-    try {
-      const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
-      if (res.ok) {
-        document.getElementById('formSuccess').style.display = 'block';
-        document.getElementById('formError').style.display = 'none';
-        form.reset();
-      } else { throw new Error(); }
-    } catch {
-      document.getElementById('formError').style.display = 'block';
-      document.getElementById('formSuccess').style.display = 'none';
-    }
-
+  // Cuando el iframe oculto carga (= Google respondió) → mostrar éxito
+  iframe.addEventListener('load', () => {
+    if (!submitting) return; // ignora la carga inicial
+    submitting = false;
+    document.getElementById('formSuccess').style.display = 'block';
+    document.getElementById('formError').style.display = 'none';
+    form.reset();
+    const btn = form.querySelector('.btn-submit');
     btn.textContent = 'Enviar mensaje';
     btn.disabled = false;
   });
