@@ -543,7 +543,8 @@
     var wrapper = document.querySelector('.scroll-video-wrapper');
     if (!video || !wrapper) return;
 
-    // rAF lerp continuo (requiere vídeo encodado con keyint=1)
+    // rAF lerp continuo + prewarm del decoder (keyint=1 + pre-cache frames)
+    var ready    = false;
     var complete = false;
     var rafId    = null;
     var current  = 0;
@@ -559,7 +560,7 @@
     }
 
     function tick() {
-      if (!video.duration) { rafId = null; return; }
+      if (!ready || !video.duration) { rafId = null; return; }
       var target = targetTime();
       var diff   = target - current;
       var k = Math.abs(diff) > 0.8 ? Math.min(0.5, LERP + Math.abs(diff) * 0.08) : LERP;
@@ -576,8 +577,42 @@
     }
 
     function onScroll() {
-      if (!video.duration) return;
+      if (!ready || !video.duration) return;
       if (!rafId) rafId = requestAnimationFrame(tick);
+    }
+
+    function finishPrewarm() {
+      if (ready) return;
+      try { video.pause(); } catch (_) {}
+      video.playbackRate = 1;
+      try { video.currentTime = 0; } catch (_) {}
+      current = 0; ready = true; onScroll();
+    }
+
+    function prewarm() {
+      if (!video.duration) {
+        video.addEventListener('loadeddata', prewarm, { once: true });
+        return;
+      }
+      video.muted = true;
+      video.playbackRate = 4;
+      var safetyMs = (video.duration / 4) * 1000 + 1500;
+      var safety = setTimeout(finishPrewarm, safetyMs);
+      video.addEventListener('ended', function () { clearTimeout(safety); finishPrewarm(); }, { once: true });
+      var p = video.play();
+      if (p && p.then) {
+        p.catch(function () {
+          clearTimeout(safety);
+          var samples = 12, i = 0;
+          function nextSeek() {
+            if (i >= samples) { finishPrewarm(); return; }
+            try { video.currentTime = (i / (samples - 1)) * video.duration; } catch (_) {}
+            i++;
+            video.addEventListener('seeked', nextSeek, { once: true });
+          }
+          nextSeek();
+        });
+      }
     }
 
     // Bloquear scroll desktop (wheel) si el vídeo no ha terminado
@@ -589,14 +624,11 @@
       }
     }, { passive: false });
 
-    // Bloquear scroll móvil (touch) — análogo al wheel pero con dy de touch
     var touchStartY = 0;
-    window.addEventListener('touchstart', function (e) {
-      touchStartY = e.touches[0].clientY;
-    }, { passive: true });
+    window.addEventListener('touchstart', function (e) { touchStartY = e.touches[0].clientY; }, { passive: true });
     window.addEventListener('touchmove', function (e) {
       if (complete || !video.duration) return;
-      var dy = touchStartY - e.touches[0].clientY; // positivo = swipe hacia arriba = scroll abajo
+      var dy = touchStartY - e.touches[0].clientY;
       if (dy <= 0) return;
       var wrapperEnd = wrapTop() + range();
       if (window.scrollY + dy > wrapperEnd && video.currentTime < video.duration - 0.3) {
@@ -605,15 +637,8 @@
     }, { passive: false });
 
     window.addEventListener('scroll', onScroll, { passive: true });
-
-    // Force first frame decode (iOS Safari no renderiza frame 0 sin un seek)
-    video.addEventListener('loadedmetadata', function () {
-      video.currentTime = 0.001;
-      onScroll();
-    });
-    // Reintento por si loadedmetadata ya pasó cuando se enganchó el listener
-    if (video.readyState >= 1) { video.currentTime = 0.001; onScroll(); }
     video.addEventListener('ended', function () { complete = true; });
+    prewarm();
   }());
 
   const heroVideo = document.getElementById('heroVideo');

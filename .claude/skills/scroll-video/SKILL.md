@@ -30,6 +30,8 @@ Tres alternativas y por qué esta gana **cuando el vídeo está encodado con key
 
 > **Lección clave (validada con cliente real, 2026-04-26 en Motobiker Xperiences):** El approach híbrido `playbackRate + seek` produce saltos bruscos puntuales por sus tres jolts (catch-up seek, snap-on-stop, backward seeks). El rAF lerp continuo no tiene jolts. Con keyframe-per-frame ya en sitio, escribir `video.currentTime` cuesta casi cero — **siempre preferir rAF lerp**.
 
+> **Segunda lección (mismo cliente, mismo día):** Con encoding correcto + rAF lerp, AÚN se notaban trompicones en el PRIMER scrub completo. Causa: el decoder caching. Cada frame se decodifica la primera vez, queda en caché las siguientes. Solución: **prewarm del decoder** — al cargar la página, reproducir el vídeo entero a 4x velocidad en silencio para forzar al navegador a decodificar y cachear todos los frames antes de que el usuario interactúe. Tras el prewarm, el primer scrub manual ya es fluido. Sin prewarm, el cliente literalmente reportó "cuando justo abro la web la transición va a trompicones pero después de hacerla un par de veces ya funciona".
+
 ---
 
 ## 1. Encoding correcto (no negociable)
@@ -101,7 +103,27 @@ Sin `autoplay` ni `loop` en el HTML — el JS los activa solo en móvil.
 
 ---
 
-## 4. JS completo (rAF lerp continuo — recomendado)
+## 4. Prewarm del decoder (no negociable)
+
+Aunque el vídeo esté con keyint=1, la PRIMERA vez que se decodifica cada frame el navegador tarda algo (decode + GPU upload). En las siguientes ya está en caché. Resultado: el PRIMER scrub manual del usuario sale a trompicones; los siguientes son fluidos.
+
+**Solución:** al cargar la página, reproducir el vídeo entero a 4x velocidad en silencio. Eso fuerza al navegador a decodificar y cachear todos los frames sin que el usuario interactúe. Cuando arrastra el scroll por primera vez, ya está todo caliente.
+
+**Mecánica:**
+1. En `loadeddata`: poner `playbackRate = 4`, `muted = true`, llamar `video.play()`.
+2. Cuando dispara `ended`: `pause()`, `playbackRate = 1`, `currentTime = 0`, marcar `ready = true`.
+3. Mientras `ready === false`, el rAF lerp ignora el scroll (no mueve el vídeo). El usuario sigue viendo el poster.
+4. Tras prewarm, el rAF lerp arranca normal. Primer scrub fluido.
+
+**Coste:** ~1.25s para un vídeo de 5s a 4x. Imperceptible si el usuario está leyendo el hero text.
+
+**Fallback si autoplay bloqueado:** seek-sampling de 12 frames distribuidos por la timeline. Más lento pero también caliente la mayoría del decoder.
+
+**Safety net:** un `setTimeout` que llama `finishPrewarm()` si el `ended` no dispara en 2x el tiempo esperado, por si algún navegador raro no acaba bien.
+
+---
+
+## 5. JS completo (rAF lerp + prewarm — recomendado)
 
 ```javascript
 // MÓVIL: bypass scroll-driven (autoplay loop simple — Safari iOS no escala)
@@ -118,9 +140,12 @@ Sin `autoplay` ni `loop` en el HTML — el JS los activa solo en móvil.
   }
 }());
 
-// DESKTOP: rAF lerp continuo
+// DESKTOP: rAF lerp continuo + prewarm del decoder
 // Con keyframe-per-frame, asignar currentTime cuesta casi nada → podemos
 // interpolar suavemente hacia el target en cada frame sin saltos ni snaps.
+// Prewarm: reproducir el vídeo entero a 4x al cargar para cachear todos los
+// frames en el decoder ANTES de que el usuario empiece a scrollear (sin esto,
+// el primer scrub manual sale a trompicones).
 (function () {
   if (window.matchMedia('(max-width: 768px)').matches) return;
 
@@ -128,6 +153,7 @@ Sin `autoplay` ni `loop` en el HTML — el JS los activa solo en móvil.
   var wrapper = document.querySelector('.scroll-video-wrapper');
   if (!video || !wrapper) return;
 
+  var ready    = false;   // gate del scroll handler hasta que prewarm acabe
   var complete = false;
   var rafId    = null;
   var current  = 0;
@@ -142,7 +168,7 @@ Sin `autoplay` ni `loop` en el HTML — el JS los activa solo en móvil.
   }
 
   function tick() {
-    if (!video.duration) { rafId = null; return; }
+    if (!ready || !video.duration) { rafId = null; return; }
     var target = targetTime();
     var diff   = target - current;
     // Lerp adaptativo: si scroll muy rápido (diff > 0.8s), aceleramos
@@ -160,8 +186,49 @@ Sin `autoplay` ni `loop` en el HTML — el JS los activa solo en móvil.
   }
 
   function onScroll() {
-    if (!video.duration) return;
+    if (!ready || !video.duration) return;
     if (!rafId) rafId = requestAnimationFrame(tick);
+  }
+
+  function finishPrewarm() {
+    if (ready) return;
+    try { video.pause(); } catch (_) {}
+    video.playbackRate = 1;
+    try { video.currentTime = 0; } catch (_) {}
+    current = 0;
+    ready = true;
+    onScroll();
+  }
+
+  function prewarm() {
+    if (!video.duration) {
+      video.addEventListener('loadeddata', prewarm, { once: true });
+      return;
+    }
+    video.muted = true;
+    video.playbackRate = 4;
+    // Safety net: si no termina en 2x el tiempo esperado, asumimos listo
+    var safetyMs = (video.duration / 4) * 1000 + 1500;
+    var safety = setTimeout(finishPrewarm, safetyMs);
+    video.addEventListener('ended', function () {
+      clearTimeout(safety);
+      finishPrewarm();
+    }, { once: true });
+    var p = video.play();
+    if (p && p.then) {
+      p.catch(function () {
+        // Autoplay bloqueado → fallback con seek-sampling de 12 frames
+        clearTimeout(safety);
+        var samples = 12, i = 0;
+        function nextSeek() {
+          if (i >= samples) { finishPrewarm(); return; }
+          try { video.currentTime = (i / (samples - 1)) * video.duration; } catch (_) {}
+          i++;
+          video.addEventListener('seeked', nextSeek, { once: true });
+        }
+        nextSeek();
+      });
+    }
   }
 
   // Bloquear scroll desktop hasta que el vídeo termine
@@ -189,13 +256,8 @@ Sin `autoplay` ni `loop` en el HTML — el JS los activa solo en móvil.
   }, { passive: false });
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  video.addEventListener('loadeddata', function () {
-    video.pause();
-    current = 0;
-    video.currentTime = 0;
-    onScroll();
-  });
   video.addEventListener('ended', function () { complete = true; });
+  prewarm();
 }());
 ```
 
