@@ -13,40 +13,35 @@ description: >
 
 # Scroll Video
 
-El vídeo del hero está siempre ligado a la posición del scroll mediante un
-loop `requestAnimationFrame` que interpola `video.currentTime` hacia el
-target calculado por el scroll. La velocidad de la transición es proporcional
-a la velocidad del scroll de forma natural (lerp adaptativo cuando el diff es grande).
+**Approach definitivo (validado con cliente real, 2026-04-26):** pre-renderizar cada frame del vídeo a un `ImageBitmap` al cargar, sustituir el `<video>` por un `<canvas>`, y dibujar el frame correspondiente al scroll con `ctx.drawImage(bitmap)`. Operación GPU instantánea, sin decodificación de vídeo durante el scroll. Imposible que tartamudee.
 
-## Por qué este enfoque
+## Por qué este approach gana a todo lo demás
 
-Tres alternativas y por qué esta gana **cuando el vídeo está encodado con keyframe-per-frame** (ver sección de encoding):
+Probé las 4 alternativas con un cliente real. Solo una funciona perfecto:
 
-| Enfoque | Problema |
+| Approach | Resultado |
 |---|---|
-| `video.play()` con `playbackRate` variable | No sigue al scroll real, acumula desfase. Saltos en backward (requiere seek). Snap final al parar de scrollear → jolts visibles. |
-| `currentTime` directo (sin lerp) | Si el scroll es rápido, salta de un frame a otro lejano → trompicones. Usuario ve teletransportes. |
-| **`currentTime` con lerp + rAF (recomendado)** | El vídeo persigue el target del scroll suavemente. Sin saltos, sin snaps, sin playbackRate. Solo funciona bien con keyframe-per-frame, pero ahí es perfecto. |
+| `video.play()` con `playbackRate` variable | Saltos en backward, snap final, no sigue scroll real. **Fail.** |
+| `currentTime` directo (sin lerp) | Saltos teleport en scroll rápido. **Fail.** |
+| `currentTime` con rAF lerp continuo | Decoder no cachea frames decodificados → primer scrub a trompicones, mejora con repetición. **Fail.** |
+| `currentTime` con rAF lerp + prewarm (fetch + seek-sampling) | Igual: decoder descarta cada frame al seekar al siguiente. Pre-calentar 60 puntos no sirve. **Fail.** |
+| **Canvas + ImageBitmap[]** | Decode upfront una vez, scroll dibuja bitmaps GPU. **Perfecto.** |
 
-> **Lección clave (validada con cliente real, 2026-04-26 en Motobiker Xperiences):** El approach híbrido `playbackRate + seek` produce saltos bruscos puntuales por sus tres jolts (catch-up seek, snap-on-stop, backward seeks). El rAF lerp continuo no tiene jolts. Con keyframe-per-frame ya en sitio, escribir `video.currentTime` cuesta casi cero — **siempre preferir rAF lerp**.
-
-> **Segunda lección (mismo cliente, mismo día):** Con encoding correcto + rAF lerp, AÚN se notaban trompicones en el PRIMER scrub completo. Causa: el decoder caching. Cada frame se decodifica la primera vez, queda en caché las siguientes. Solución: **prewarm del decoder** — al cargar la página, reproducir el vídeo entero a 4x velocidad en silencio para forzar al navegador a decodificar y cachear todos los frames antes de que el usuario interactúe. Tras el prewarm, el primer scrub manual ya es fluido. Sin prewarm, el cliente literalmente reportó "cuando justo abro la web la transición va a trompicones pero después de hacerla un par de veces ya funciona".
+> **Lección clave:** los browsers NO mantienen un caché de frames decodificados entre seeks. Cada `video.currentTime = X` decodifica un frame y descarta el anterior. Por eso pre-seekear no calienta nada — al terminar el pre-seek, solo el último frame está en memoria. La única forma de eliminar el problema es sacar la decodificación del scroll-time: pre-renderizar todos los frames a `ImageBitmap` al cargar (fuera del decoder de vídeo, en memoria GPU permanente) y usar canvas en vez de video durante el scroll.
 
 ---
 
-## 1. Encoding correcto (no negociable)
+## 1. Encoding (recomendado pero no crítico con canvas approach)
 
-**Sin keyframe-per-frame, ningún approach es fluido.** Re-encodar SIEMPRE los vídeos antes de servirlos:
+Con el canvas approach, el encoding del vídeo importa solo para la fase de captura inicial. Aún así, recomendado re-encodar con keyframe-per-frame para que los seeks de captura sean rápidos:
 
 ```bash
-# Desktop (1920x1080 o lo que sea el original, mantener resolución)
 ffmpeg -i hero.mp4 \
   -c:v libx264 -x264opts "keyint=1:min-keyint=1:no-scenecut" \
   -crf 23 -preset slow -tune film \
   -an -movflags +faststart \
   -y hero-scrub.mp4
 
-# Mobile (escalar a 1280px ancho para reducir peso)
 ffmpeg -i hero.mp4 \
   -c:v libx264 -x264opts "keyint=1:min-keyint=1:no-scenecut" \
   -crf 24 -preset slow -tune film \
@@ -54,33 +49,32 @@ ffmpeg -i hero.mp4 \
   -y hero-scrub-mobile.mp4
 ```
 
-**Por qué keyint=1:** cada frame del vídeo es un keyframe independiente. Cualquier `video.currentTime = X` se decodifica al instante (no hay que rebobinar al keyframe anterior). Sin esto, los seeks tardan decenas de ms y se ven los trompicones.
-
-**Coste:** archivos un 5-15% más grandes que con encoding por defecto. Vale la pena.
-
-**Extraer poster:**
+**Extraer poster** (se muestra durante la captura, ~3-5s):
 ```bash
-ffmpeg -ss 00:00:02 -i hero-scrub.mp4 -frames:v 1 -q:v 2 hero-poster.jpg
+ffmpeg -ss 00:00:01 -i hero-scrub.mp4 -frames:v 1 -q:v 2 hero-poster.jpg
 ```
 
 ---
 
-## 2. Estructura HTML
+## 2. HTML
 
 ```html
 <!-- SCROLL-VIDEO-SECTION -->
 <div class="scroll-video-wrapper">
   <section class="hero">
+    <div class="hero-poster-bg" aria-hidden="true"></div>
     <video id="heroVideo" muted playsinline preload="auto" poster="assets/hero-poster.jpg">
       <source src="assets/hero-scrub-mobile.mp4" type="video/mp4" media="(max-width: 768px)">
       <source src="assets/hero-scrub.mp4" type="video/mp4">
     </video>
-    <!-- resto del hero -->
+    <!-- el JS inserta <canvas class="hero-canvas"> aquí dinámicamente -->
+    <div class="hero-overlay"></div>
+    <div class="hero-content"><!-- texto, CTA, etc. --></div>
   </section>
 </div>
 ```
 
-Sin `autoplay` ni `loop` en el HTML — el JS los activa solo en móvil.
+Sin `autoplay` ni `loop`. El JS los activa solo en móvil.
 
 ---
 
@@ -89,41 +83,51 @@ Sin `autoplay` ni `loop` en el HTML — el JS los activa solo en móvil.
 ```css
 .scroll-video-wrapper { height: 175vh; }
 .scroll-video-wrapper .hero { position: sticky; top: 0; height: 100vh; }
-
-/* Móvil: hero normal sin scroll-driven (Safari iOS no soporta scrubbing fiable) */
 @media (max-width: 768px) {
   .scroll-video-wrapper { height: auto; }
   .scroll-video-wrapper .hero { position: relative; }
 }
 
-/* IMPORTANTE — Si tu base CSS tiene un `.hero-placeholder` con background visible
-   (gradient, color, etc.), ocúltalo. Sino tapa el <video>: */
-.hero-placeholder { display: none; }
+/* Vídeo: oculto permanentemente en desktop. Solo se usa para CAPTURAR
+   los frames al inicio. En móvil sí se ve y reproduce en autoplay loop. */
+.hero video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  z-index: 1;
+}
+
+/* Canvas que sustituye al vídeo durante el scroll */
+.hero-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0; transition: opacity .5s ease;
+  z-index: 1; pointer-events: none; display: block;
+}
+.hero-canvas.ready { opacity: 1; }
+
+/* Poster mostrado mientras se renderizan los frames a memoria (3-5s) */
+.hero-poster-bg {
+  position: absolute; inset: 0;
+  background-image: url('assets/hero-poster.jpg');
+  background-size: cover; background-position: center;
+  transition: opacity .5s ease;
+  z-index: 0;
+}
+.hero-poster-bg.faded { opacity: 0; pointer-events: none; }
+
+.hero-overlay { z-index: 2; }
+.hero-content { z-index: 3; position: relative; }
+
+/* En móvil mostramos el vídeo normal con autoplay loop */
+@media (max-width: 768px) {
+  .hero video { opacity: 1; visibility: visible; }
+  .hero-canvas, .hero-poster-bg { display: none; }
+}
 ```
 
 ---
 
-## 4. Prewarm del decoder (no negociable)
-
-Aunque el vídeo esté con keyint=1, la PRIMERA vez que se decodifica cada frame el navegador tarda algo (decode + GPU upload). En las siguientes ya está en caché. Resultado: el PRIMER scrub manual del usuario sale a trompicones; los siguientes son fluidos.
-
-**Solución:** al cargar la página, reproducir el vídeo entero a 4x velocidad en silencio. Eso fuerza al navegador a decodificar y cachear todos los frames sin que el usuario interactúe. Cuando arrastra el scroll por primera vez, ya está todo caliente.
-
-**Mecánica:**
-1. En `loadeddata`: poner `playbackRate = 4`, `muted = true`, llamar `video.play()`.
-2. Cuando dispara `ended`: `pause()`, `playbackRate = 1`, `currentTime = 0`, marcar `ready = true`.
-3. Mientras `ready === false`, el rAF lerp ignora el scroll (no mueve el vídeo). El usuario sigue viendo el poster.
-4. Tras prewarm, el rAF lerp arranca normal. Primer scrub fluido.
-
-**Coste:** ~1.25s para un vídeo de 5s a 4x. Imperceptible si el usuario está leyendo el hero text.
-
-**Fallback si autoplay bloqueado:** seek-sampling de 12 frames distribuidos por la timeline. Más lento pero también caliente la mayoría del decoder.
-
-**Safety net:** un `setTimeout` que llama `finishPrewarm()` si el `ended` no dispara en 2x el tiempo esperado, por si algún navegador raro no acaba bien.
-
----
-
-## 5. JS completo (rAF lerp + prewarm — recomendado)
+## 4. JS completo (canvas + ImageBitmap)
 
 ```javascript
 // MÓVIL: bypass scroll-driven (autoplay loop simple — Safari iOS no escala)
@@ -140,126 +144,236 @@ Aunque el vídeo esté con keyint=1, la PRIMERA vez que se decodifica cada frame
   }
 }());
 
-// DESKTOP: rAF lerp continuo + prewarm del decoder
-// Con keyframe-per-frame, asignar currentTime cuesta casi nada → podemos
-// interpolar suavemente hacia el target en cada frame sin saltos ni snaps.
-// Prewarm: reproducir el vídeo entero a 4x al cargar para cachear todos los
-// frames en el decoder ANTES de que el usuario empiece a scrollear (sin esto,
-// el primer scrub manual sale a trompicones).
+// DESKTOP: canvas approach
+// 1. fetch() del vídeo a memoria como Blob URL → seeks instantáneos
+// 2. Seek frame por frame → drawImage(video) → createImageBitmap → push a frames[]
+// 3. Hide video, show canvas
+// 4. Scroll handler: drawImage(frames[idx]) → operación GPU instantánea
 (function () {
   if (window.matchMedia('(max-width: 768px)').matches) return;
-
-  var video   = document.getElementById('heroVideo');
-  var wrapper = document.querySelector('.scroll-video-wrapper');
+  var video       = document.getElementById('heroVideo');
+  var wrapper     = document.querySelector('.scroll-video-wrapper');
+  var placeholder = document.querySelector('.hero-poster-bg');
   if (!video || !wrapper) return;
 
-  var ready    = false;   // gate del scroll handler hasta que prewarm acabe
+  var ready    = false;
   var complete = false;
   var rafId    = null;
-  var current  = 0;
-  var LERP     = 0.18; // 0.10 muy cinematográfico · 0.18 balanceado · 0.30 muy reactivo
+  var current  = 0;        // índice de frame actual (no segundos)
+  var LERP     = 0.18;     // 0.10 cinematográfico · 0.18 balanceado · 0.30 reactivo
+  var frames   = [];       // ImageBitmap[]
+  var canvas   = null;
+  var ctx      = null;
 
   function wrapTop() { return wrapper.getBoundingClientRect().top + window.scrollY; }
   function range()   { return Math.max(1, wrapper.offsetHeight - window.innerHeight); }
-  function targetTime() {
-    if (!video.duration) return 0;
+  function targetIndex() {
+    if (!frames.length) return 0;
     var scrolled = Math.max(0, window.scrollY - wrapTop());
-    return Math.min(1, scrolled / range()) * video.duration;
+    var p = Math.min(1, scrolled / range());
+    return p * (frames.length - 1);
+  }
+  function drawFrame(idx) {
+    if (!ctx) return;
+    idx = Math.max(0, Math.min(frames.length - 1, idx | 0));
+    var bmp = frames[idx];
+    if (bmp) ctx.drawImage(bmp, 0, 0, canvas.width, canvas.height);
   }
 
   function tick() {
-    if (!ready || !video.duration) { rafId = null; return; }
-    var target = targetTime();
+    if (!ready || !frames.length) { rafId = null; return; }
+    var target = targetIndex();
     var diff   = target - current;
-    // Lerp adaptativo: si scroll muy rápido (diff > 0.8s), aceleramos
-    var k = Math.abs(diff) > 0.8 ? Math.min(0.5, LERP + Math.abs(diff) * 0.08) : LERP;
-    if (Math.abs(diff) < 0.003) {
+    // Lerp adaptativo: si diff > 4 frames (scroll rápido), aceleramos
+    var k = Math.abs(diff) > 4 ? Math.min(0.5, LERP + Math.abs(diff) * 0.02) : LERP;
+    if (Math.abs(diff) < 0.05) {
       current = target;
-      try { video.currentTime = current; } catch (_) {}
-      if (target >= video.duration - 0.1) complete = true;
+      drawFrame(Math.round(current));
+      if (current >= frames.length - 1.05) complete = true;
       rafId = null;
       return;
     }
     current += diff * k;
-    try { video.currentTime = current; } catch (_) {}
+    drawFrame(Math.round(current));
     rafId = requestAnimationFrame(tick);
   }
 
   function onScroll() {
-    if (!ready || !video.duration) return;
+    if (!ready || !frames.length) return;
     if (!rafId) rafId = requestAnimationFrame(tick);
   }
 
   function finishPrewarm() {
     if (ready) return;
-    try { video.pause(); } catch (_) {}
-    video.playbackRate = 1;
-    try { video.currentTime = 0; } catch (_) {}
-    current = 0;
     ready = true;
+    drawFrame(0);
+    if (canvas) canvas.classList.add('ready');
+    if (placeholder) placeholder.classList.add('faded');
+    try { video.style.display = 'none'; } catch (_) {}
     onScroll();
   }
 
-  function prewarm() {
-    if (!video.duration) {
-      video.addEventListener('loadeddata', prewarm, { once: true });
-      return;
-    }
-    video.muted = true;
-    video.playbackRate = 4;
-    // Safety net: si no termina en 2x el tiempo esperado, asumimos listo
-    var safetyMs = (video.duration / 4) * 1000 + 1500;
-    var safety = setTimeout(finishPrewarm, safetyMs);
-    video.addEventListener('ended', function () {
-      clearTimeout(safety);
-      finishPrewarm();
-    }, { once: true });
-    var p = video.play();
-    if (p && p.then) {
-      p.catch(function () {
-        // Autoplay bloqueado → fallback con seek-sampling de 12 frames
-        clearTimeout(safety);
-        var samples = 12, i = 0;
-        function nextSeek() {
-          if (i >= samples) { finishPrewarm(); return; }
-          try { video.currentTime = (i / (samples - 1)) * video.duration; } catch (_) {}
-          i++;
-          video.addEventListener('seeked', nextSeek, { once: true });
-        }
-        nextSeek();
-      });
-    }
+  function setupCanvas(w, h) {
+    canvas = document.createElement('canvas');
+    canvas.className = 'hero-canvas';
+    canvas.width = w;
+    canvas.height = h;
+    canvas.setAttribute('aria-hidden', 'true');
+    ctx = canvas.getContext('2d');
+    video.parentNode.insertBefore(canvas, video.nextSibling);
   }
 
-  // Bloquear scroll desktop hasta que el vídeo termine
+  function captureFrames() {
+    return new Promise(function (resolve) {
+      // Escala del bitmap respecto al vídeo nativo. 0.6 = balance bueno.
+      // 1920x1080 → 1152x648 × 4 bytes × 121 frames ≈ 360MB en GPU.
+      var SCALE = 0.6;
+      var w = Math.max(2, Math.floor(video.videoWidth * SCALE));
+      var h = Math.max(2, Math.floor(video.videoHeight * SCALE));
+      var fps = 24;
+      var totalFrames = Math.max(1, Math.round(video.duration * fps));
+      var MAX_FRAMES = 200; // cap por seguridad de memoria
+      var stride = Math.max(1, Math.ceil(totalFrames / MAX_FRAMES));
+      var captureCount = Math.ceil(totalFrames / stride);
+
+      var off = document.createElement('canvas');
+      off.width = w; off.height = h;
+      var offctx = off.getContext('2d');
+      setupCanvas(w, h);
+
+      var i = 0;
+      function nextFrame() {
+        if (i >= captureCount) { resolve(); return; }
+        var t = (i * stride) / fps;
+        if (t >= video.duration) t = Math.max(0, video.duration - 0.001);
+        i++;
+
+        var captured = false;
+        function capture() {
+          if (captured) return;
+          captured = true;
+          try {
+            offctx.drawImage(video, 0, 0, w, h);
+            if (window.createImageBitmap) {
+              createImageBitmap(off).then(function (bmp) {
+                frames.push(bmp);
+                // Yield al event loop cada 10 frames para no bloquear UI
+                if (i % 10 === 0) setTimeout(nextFrame, 0); else nextFrame();
+              }).catch(function () {
+                // Fallback: copiar a canvas dedicado (más memoria)
+                var copy = document.createElement('canvas');
+                copy.width = w; copy.height = h;
+                copy.getContext('2d').drawImage(off, 0, 0);
+                frames.push(copy);
+                nextFrame();
+              });
+            } else {
+              var copy = document.createElement('canvas');
+              copy.width = w; copy.height = h;
+              copy.getContext('2d').drawImage(off, 0, 0);
+              frames.push(copy);
+              nextFrame();
+            }
+          } catch (e) { nextFrame(); }
+        }
+
+        // requestVideoFrameCallback es la API correcta para esperar a que
+        // el frame realmente esté pintado. Fallback a 'seeked' si no existe.
+        var safety = setTimeout(capture, 300);
+        if (video.requestVideoFrameCallback) {
+          video.requestVideoFrameCallback(function () {
+            clearTimeout(safety);
+            requestAnimationFrame(capture); // 1 rAF más para asegurar paint
+          });
+        } else {
+          video.addEventListener('seeked', function onseek() {
+            video.removeEventListener('seeked', onseek);
+            clearTimeout(safety);
+            requestAnimationFrame(capture);
+          });
+        }
+        try { video.currentTime = t; } catch (_) { capture(); }
+      }
+      nextFrame();
+    });
+  }
+
+  function prewarm() {
+    if (!video.videoWidth || !video.duration) {
+      video.addEventListener('loadedmetadata', prewarm, { once: true });
+      return;
+    }
+    // Determinar URL real según media queries del <source>
+    var url = null;
+    var sources = video.querySelectorAll('source');
+    for (var i = 0; i < sources.length; i++) {
+      var s = sources[i];
+      if (!s.media || window.matchMedia(s.media).matches) { url = s.src; break; }
+    }
+    if (!url) url = video.currentSrc;
+
+    function afterFile() {
+      captureFrames().then(finishPrewarm).catch(finishPrewarm);
+    }
+
+    if (!url) { afterFile(); return; }
+
+    // fetch() del archivo entero a Blob → todos los seeks de captura serán
+    // instantáneos porque el archivo está en memoria, no requieren red
+    fetch(url).then(function (r) {
+      if (!r.ok) throw new Error('fetch failed');
+      return r.blob();
+    }).then(function (blob) {
+      var blobUrl = URL.createObjectURL(blob);
+      while (video.firstChild) video.removeChild(video.firstChild);
+      video.src = blobUrl;
+      return new Promise(function (resolve, reject) {
+        var to = setTimeout(reject, 12000);
+        video.addEventListener('loadedmetadata', function () {
+          clearTimeout(to); resolve();
+        }, { once: true });
+      });
+    }).then(afterFile).catch(afterFile);
+  }
+
+  // Bloquear scroll desktop hasta que el vídeo termine (current llega al final)
   window.addEventListener('wheel', function (e) {
-    if (complete || !video.duration || e.deltaY <= 0) return;
+    if (complete || !ready || !frames.length || e.deltaY <= 0) return;
     var wrapperEnd = wrapTop() + range();
-    if (window.scrollY + e.deltaY > wrapperEnd && video.currentTime < video.duration - 0.3) {
+    if (window.scrollY + e.deltaY > wrapperEnd && current < frames.length - 2) {
       e.preventDefault();
     }
   }, { passive: false });
 
-  // Bloquear scroll touch (sin esto en móvil el wrapper no se respeta)
   var touchStartY = 0;
   window.addEventListener('touchstart', function (e) {
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
   window.addEventListener('touchmove', function (e) {
-    if (complete || !video.duration) return;
+    if (complete || !ready || !frames.length) return;
     var dy = touchStartY - e.touches[0].clientY;
     if (dy <= 0) return;
     var wrapperEnd = wrapTop() + range();
-    if (window.scrollY + dy > wrapperEnd && video.currentTime < video.duration - 0.3) {
+    if (window.scrollY + dy > wrapperEnd && current < frames.length - 2) {
       e.preventDefault();
     }
   }, { passive: false });
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  video.addEventListener('ended', function () { complete = true; });
   prewarm();
 }());
 ```
+
+---
+
+## Flujo completo (visualización)
+
+1. **Página carga.** Hero muestra `.hero-poster-bg` (imagen estática, opacity:1). Vídeo `opacity:0 visibility:hidden`. Canvas todavía no existe.
+2. **`prewarm()` arranca:** fetch() del archivo del vídeo → Blob URL → re-asigna a `video.src`.
+3. **`captureFrames()`:** crea canvas e inicia bucle. Para cada frame: `video.currentTime = t`, espera `requestVideoFrameCallback`, `offctx.drawImage(video)`, `createImageBitmap(off)` → push a `frames[]`.
+4. **Cuando termina** (~3-5s para vídeo de 5s): `finishPrewarm()`. Canvas fade-in, poster fade-out, video display:none.
+5. **Usuario scrollea:** `tick()` calcula `targetIndex` desde scroll, lerpa `current` hacia él, `drawFrame(Math.round(current))` dibuja `frames[idx]` al canvas.
+6. **Bloqueo de scroll** mientras `current < frames.length - 2` y dentro del wrapper.
 
 ---
 
@@ -267,83 +381,34 @@ Aunque el vídeo esté con keyint=1, la PRIMERA vez que se decodifica cada frame
 
 | Qué | Dónde | Efecto |
 |---|---|---|
-| Reactividad del lerp | `var LERP = 0.18` | 0.10 = muy cinematográfico (vídeo va con delay). 0.30 = muy reactivo. 0.50+ = casi sin lerp. |
-| Umbral del lerp adaptativo | `Math.abs(diff) > 0.8` | Si subes a 1.5, sólo acelera con scroll muy rápido (más cinematográfico). |
-| Cap del lerp adaptativo | `Math.min(0.5, ...)` | Cuánto puede subir como máximo. |
-| Duración del scroll | `175vh` en CSS | Menos = transición más corta. Más = más espacio para "vivir" el vídeo. |
-| Tolerancia de bloqueo | `0.3` segundos | Margen antes del final para considerar "completo". |
-| Threshold de parada del rAF | `Math.abs(diff) < 0.003` | Cuándo detener el loop. Bajar si percibes vibración; subir si percibes parada brusca. |
-
----
-
-## Approach alternativo (sólo si NO puedes re-encodar)
-
-Si por alguna razón no tienes acceso a re-encodar el vídeo, usa el **approach híbrido playbackRate + seek**. Tiene jolts puntuales pero funciona aceptablemente con encoding normal:
-
-```javascript
-// Solo si NO puedes re-encodar. Tiene jolts visibles.
-// (Forward: playbackRate proporcional al diff. Backward: seeks throttleados. Snap al parar.)
-(function () {
-  if (window.matchMedia('(max-width: 768px)').matches) return;
-  var video   = document.getElementById('heroVideo');
-  var wrapper = document.querySelector('.scroll-video-wrapper');
-  if (!video || !wrapper) return;
-
-  var complete = false, lastY = window.scrollY, lastSeek = 0, stopT = null;
-  function wrapTop() { return wrapper.getBoundingClientRect().top + window.scrollY; }
-  function range()   { return wrapper.offsetHeight - window.innerHeight; }
-  function targetTime() {
-    if (!video.duration) return 0;
-    var s = Math.max(0, window.scrollY - wrapTop());
-    return Math.min(1, s / range()) * video.duration;
-  }
-  function onScroll() {
-    if (!video.duration) return;
-    var dy = window.scrollY - lastY; lastY = window.scrollY;
-    if (dy === 0) return;
-    clearTimeout(stopT);
-    var t = targetTime(), c = video.currentTime, diff = t - c, now = performance.now();
-    if (dy > 0) {
-      if (diff > 2 && now - lastSeek > 250) { video.currentTime = t - 0.5; lastSeek = now; }
-      video.playbackRate = Math.max(1, Math.min(8, 1 + Math.max(0, diff) * 1.5));
-      if (video.paused) video.play().catch(function(){});
-    } else {
-      if (now - lastSeek > 80) { video.pause(); video.currentTime = t; lastSeek = now; }
-    }
-    stopT = setTimeout(function () {
-      video.pause(); video.currentTime = targetTime();
-      if (video.duration && video.currentTime >= video.duration - 0.2) complete = true;
-    }, 150);
-  }
-  // (wheel/touch blocking igual que en el rAF lerp)
-  window.addEventListener('scroll', onScroll, { passive: true });
-}());
-```
-
-**Cuándo usarlo:** sólo si tienes acceso al vídeo final ya servido y no puedes pasarlo por ffmpeg.
-**Cuándo NO:** prácticamente nunca — re-encodar lleva 30s y elimina el problema de raíz.
-
----
-
-## Checklist al implementar
-
-1. ✅ Re-encodar `hero.mp4` → `hero-scrub.mp4` con `keyint=1` (sección 1)
-2. ✅ Re-encodar versión móvil escalada a 1280px
-3. ✅ Extraer `hero-poster.jpg` con ffmpeg
-4. ✅ Insertar marca `<!-- SCROLL-VIDEO-SECTION -->` en HTML
-5. ✅ HTML con `.scroll-video-wrapper` + `.hero` con `<video>` (sin autoplay/loop)
-6. ✅ CSS con `height: 175vh` + `position: sticky`
-7. ✅ Verificar que `.hero-placeholder` esté `display: none` si existe en el CSS base
-8. ✅ JS: bypass móvil + rAF lerp desktop
-9. ✅ Probar en desktop: scroll fluido sin jolts, bloqueo al final hasta acabar
-10. ✅ Probar en móvil: autoplay loop, scroll continúa normal
+| Reactividad del lerp | `var LERP = 0.18` | 0.10 cinematográfico, 0.30 reactivo |
+| Umbral lerp adaptativo | `Math.abs(diff) > 4` | (en frames) Si subes a 8, solo acelera con scroll muy rápido |
+| Cap del lerp adaptativo | `Math.min(0.5, ...)` | Cuánto puede subir como máximo |
+| Escala del bitmap | `var SCALE = 0.6` | 0.6 ≈ 360MB para 121 frames 1080p. Bajar a 0.5 = 250MB. Subir a 0.75 = 560MB |
+| Cap de frames | `var MAX_FRAMES = 200` | Si el vídeo es muy largo, samplea 1 de cada N frames |
+| Duración del scroll | `175vh` en CSS | Menos = transición más corta |
+| Tolerancia bloqueo | `current < frames.length - 2` | Margen de 2 frames antes del final |
 
 ---
 
 ## Notas
 
-- **Si el vídeo va a trompicones en general** (no específicos al scroll), es por el encoding. Re-encodar con `keyint=1` (sección 1).
-- **Si en móvil va a tirones**: el touchmove bloquea correctamente, pero móviles antiguos pueden no decodificar 1080p suavemente — escala a 1280px o 960px.
-- **Tamaño esperado:** un vídeo de 5s @ 24fps a 1080p con keyframe-per-frame pesa 8-10MB. A 1280px, 3-5MB. Es lo normal.
-- El bloqueo del wheel solo actúa al **final del wrapper**, no dentro de él, para evitar deadlocks (el vídeo necesita scroll para avanzar).
-- **Ojo con `.hero-placeholder` visible:** si tu base CSS tiene un placeholder absolute con gradient, tapará el `<video>`. Forzar `display: none` en CSS.
+- **Memoria:** ~360MB para vídeo 5s @ 24fps a 1080p con SCALE=0.6. Aceptable en desktop. Mobile usa autoplay loop, no canvas.
+- **Tiempo de prewarm:** 1-2s fetch + 2-3s captura ≈ 3-5s total. Usuario ve el poster mientras tanto.
+- **CORS:** el fetch funciona en mismo origen. Si sirves el vídeo desde un CDN distinto al de la página, asegúrate de que envíe `Access-Control-Allow-Origin: *`.
+- **`.hero-placeholder` legacy:** si tu base CSS premium tiene `.hero-placeholder { display: none }`, ignóralo o usa `.hero-poster-bg` como en este skill.
+- **Tamaño del archivo de vídeo no es crítico** para fluidez del scroll porque el archivo se descarga UNA vez y los frames están en memoria. Lo crítico es la memoria GPU para los bitmaps.
+- Si el vídeo es **muy corto** (~2s), reducir SCALE a 0.5 y subir LERP a 0.22 — los pocos frames se sienten "saltones" si el lerp es muy bajo.
+
+---
+
+## Checklist al implementar
+
+1. ✅ Re-encodar `hero-scrub.mp4` y `hero-scrub-mobile.mp4` con `keyint=1`
+2. ✅ Extraer `hero-poster.jpg` con ffmpeg (frame del segundo 1)
+3. ✅ Insertar marca `<!-- SCROLL-VIDEO-SECTION -->` en HTML
+4. ✅ Añadir `<div class="hero-poster-bg">` antes del `<video>`
+5. ✅ CSS con video oculto + canvas + poster bg
+6. ✅ JS: bypass móvil + canvas approach desktop
+7. ✅ Probar en desktop con cache disabled — debe ir fluido desde el primer scrub
+8. ✅ Probar en móvil — autoplay loop normal

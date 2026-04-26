@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyectos — Gausark S.L.P. Arquitectura y Diseño</title>
+  <meta name="description" content="Galería de proyectos realizados por Gausark S.L.P.: obra nueva, rehabilitación, reformas, urbanismo y diseño en Donostia y Gipuzkoa.">
+  <meta name="keywords" content="proyectos arquitectura Donostia, obras Gipuzkoa, portfolio Gausark, rehabilitación edificios">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://gausarkpremiumweb.vercel.app/proyectos.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="Gausark S.L.P.">
+  <meta property="og:title" content="Proyectos — Gausark S.L.P.">
+  <meta property="og:description" content="Más de 36 proyectos realizados en Donostia y Gipuzkoa.">
+  <meta property="og:url" content="https://gausarkpremiumweb.vercel.app/proyectos.html">
+  <meta property="og:image" content="https://gausarkpremiumweb.vercel.app/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Proyectos de Gausark S.L.P.",
+    "description": "Portfolio de proyectos de arquitectura, rehabilitación, reformas y diseño.",
+    "url": "https://gausarkpremiumweb.vercel.app/proyectos.html",
+    "mainEntity": { "@id": "https://gausarkpremiumweb.vercel.app/#organization" }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--color-dark); background: var(--color-white); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    img { max-width: 100%; height: auto; display: block; }
+    ul { list-style: none; }
+    a { text-decoration: none; color: inherit; }
+
+    :root {
+      --color-dark: #1c1c1c;
+      --color-mid: #666;
+      --color-light: #f5f4f1;
+      --color-white: #fff;
+      --color-accent: #ff9901;
+      --color-accent-hover: #e08800;
+      --color-border: #e2e0dc;
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'Nunito', sans-serif;
+      --max-w: 1400px;
+    }
+
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 80px; display: flex; align-items: center; padding: 0 2rem; background: rgba(28,28,28,.97); }
+    .header-inner { max-width: 1200px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .logo img { height: 38px; width: auto; filter: brightness(0) invert(1); }
+    nav ul { display: flex; gap: 2.5rem; }
+    nav a { font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.75); transition: color .2s; }
+    nav a:hover, nav a.active { color: #fff; }
+    .header-tel { font-size: .82rem; font-weight: 700; color: var(--color-accent); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; }
+    .mobile-nav { display: none; position: fixed; inset: 0; background: var(--color-dark); z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem; }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { font-family: var(--font-display); font-size: 2.2rem; font-weight: 300; color: #fff; }
+    .mobile-close { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; color: #fff; cursor: pointer; background: none; border: none; }
+
+    .page-hero { padding: 160px 2rem 80px; background: var(--color-dark); color: #fff; }
+    .page-hero-inner { max-width: var(--max-w); margin: 0 auto; }
+    .label { font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 1rem; }
+    .title { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; line-height: 1.1; }
+    .page-hero p { margin-top: 1.5rem; max-width: 640px; font-size: 1.05rem; color: rgba(255,255,255,.72); line-height: 1.7; }
+
+    /* FILTROS */
+    .filters { padding: 50px 2rem 30px; background: var(--color-white); border-bottom: 1px solid var(--color-border); position: sticky; top: 80px; z-index: 50; }
+    .filters-inner { max-width: var(--max-w); margin: 0 auto; display: flex; flex-wrap: wrap; gap: .65rem; }
+    .filter-btn {
+      font-family: var(--font-body); font-size: .82rem; font-weight: 600;
+      letter-spacing: .04em; padding: .55rem 1.2rem;
+      background: transparent; color: var(--color-mid);
+      border: 1px solid var(--color-border); border-radius: 100px;
+      cursor: pointer; transition: all .2s;
+    }
+    .filter-btn:hover { border-color: var(--color-dark); color: var(--color-dark); }
+    .filter-btn.active { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+
+    /* GRID */
+    .gallery { padding: 50px 2rem 100px; }
+    .gallery-grid { max-width: var(--max-w); margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .proj-card {
+      position: relative; aspect-ratio: 4/3; overflow: hidden; background: #1c1c1c;
+      cursor: zoom-in; border: 1px solid transparent; transition: opacity .35s ease;
+    }
+    .proj-card.hidden { display: none; }
+    .proj-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease, opacity .3s; }
+    .proj-card:hover img { transform: scale(1.05); opacity: .82; }
+    .proj-info {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 1.25rem 1.5rem;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.75) 100%);
+      display: flex; flex-direction: column; gap: .15rem;
+      color: #fff; pointer-events: none;
+    }
+    .proj-cat {
+      font-size: .68rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--color-accent); font-weight: 700;
+    }
+    .proj-title {
+      font-family: var(--font-display); font-size: 1.25rem; font-weight: 400;
+      letter-spacing: .01em; line-height: 1.2;
+    }
+    @media (max-width: 1024px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .gallery-grid { grid-template-columns: 1fr; } .filters { top: 80px; padding: 30px 1.25rem 20px; } .filters-inner { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; } .filter-btn { white-space: nowrap; } }
+
+    /* LIGHTBOX */
+    .lightbox {
+      position: fixed; inset: 0; background: rgba(0,0,0,.94);
+      z-index: 300; display: none; align-items: center; justify-content: center;
+      animation: fadeIn .25s ease;
+    }
+    .lightbox.open { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .lightbox-img-wrap {
+      max-width: 92vw; max-height: 80vh; position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .lightbox-img { max-width: 100%; max-height: 80vh; display: block; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    .lightbox-meta {
+      position: absolute; bottom: -56px; left: 0; right: 0; text-align: center;
+      color: #fff; font-family: var(--font-display);
+    }
+    .lightbox-meta .lb-cat {
+      font-family: var(--font-body); font-size: .7rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--color-accent); margin-bottom: .25rem;
+    }
+    .lightbox-meta .lb-title { font-size: 1.5rem; font-weight: 300; }
+    .lightbox-meta .lb-counter {
+      font-family: var(--font-body); font-size: .75rem; color: rgba(255,255,255,.55);
+      margin-top: .35rem;
+    }
+    .lb-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 50px; height: 50px; border: none; border-radius: 50%;
+      background: rgba(255,255,255,.1); color: #fff; font-size: 1.5rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .lb-btn:hover { background: rgba(255,255,255,.25); }
+    .lb-prev { left: 2vw; }
+    .lb-next { right: 2vw; }
+    .lb-close {
+      position: absolute; top: 1.5rem; right: 1.5rem;
+      width: 44px; height: 44px; border: none; border-radius: 50%;
+      background: rgba(255,255,255,.1); color: #fff; font-size: 1.4rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .lb-close:hover { background: rgba(255,255,255,.25); }
+    @media (max-width: 600px) {
+      .lb-btn { width: 40px; height: 40px; font-size: 1.2rem; }
+      .lb-prev { left: 1vw; } .lb-next { right: 1vw; }
+      .lightbox-meta { bottom: -48px; }
+      .lightbox-meta .lb-title { font-size: 1.1rem; }
+    }
+
+    /* CTA FINAL */
+    .cta-final { background: var(--color-accent); text-align: center; color: #fff; padding: 80px 2rem; }
+    .cta-final .title { color: #fff; }
+    .cta-final p { font-size: 1.05rem; color: rgba(255,255,255,.85); margin: 0 auto 2rem; max-width: 480px; }
+    .btn-white { display: inline-block; padding: .9rem 2rem; background: #fff; color: var(--color-accent); font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; transition: background .25s; }
+    .btn-white:hover { background: rgba(255,255,255,.9); }
+
+    footer { background: #111; color: rgba(255,255,255,.55); padding: 80px 2rem 40px; border-top: 1px solid #222; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,.07); margin-bottom: 2rem; }
+    .footer-logo { height: 34px; filter: brightness(0) invert(1); opacity: .6; margin-bottom: 1.25rem; }
+    .footer-desc { font-size: .875rem; line-height: 1.8; max-width: 260px; }
+    .footer-col h4 { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: #fff; margin-bottom: 1.25rem; }
+    .footer-col li { margin-bottom: .55rem; }
+    .footer-col a { font-size: .875rem; color: rgba(255,255,255,.45); transition: color .2s; }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom { display: flex; justify-content: space-between; font-size: .78rem; flex-wrap: wrap; gap: 1rem; }
+    .footer-social a { margin-left: 1.25rem; color: rgba(255,255,255,.4); transition: color .2s; }
+    .footer-social a:hover { color: #fff; }
+    @media (max-width: 1024px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { nav, .header-tel { display: none; } .hamburger { display: flex; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Gausark S.L.P."></a>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+        <li><a href="proyectos.html" class="active">Proyectos</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+    <a href="tel:943440752" class="header-tel">943 44 07 52</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-close" id="mobileClose">×</button>
+  <a href="index.html">Inicio</a>
+  <a href="servicios.html">Servicios</a>
+  <a href="proyectos.html">Proyectos</a>
+  <a href="nosotros.html">Nosotros</a>
+  <a href="contacto.html">Contacto</a>
+  <a href="tel:943440752" style="color:var(--color-accent);font-family:var(--font-body);font-size:1.1rem;">943 44 07 52</a>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="label">Proyectos</p>
+    <h1 class="title">Más de 36 proyectos<br>en Donostia y Gipuzkoa</h1>
+    <p>Selección de obras realizadas por Gausark a lo largo de su trayectoria. Filtra por categoría y haz click en cualquier imagen para verla ampliada.</p>
+  </div>
+</div>
+
+<div class="filters">
+  <div class="filters-inner" id="filters">
+<button class="filter-btn active" data-filter="all">Todos · 36</button>
+<button class="filter-btn" data-filter="obra-nueva">Obra nueva · 10</button>
+<button class="filter-btn" data-filter="rehabilitacion">Rehabilitación · 10</button>
+<button class="filter-btn" data-filter="reforma">Reforma · 3</button>
+<button class="filter-btn" data-filter="urbanizacion">Urbanización · 5</button>
+<button class="filter-btn" data-filter="urbanismo">Urbanismo · 2</button>
+<button class="filter-btn" data-filter="interior">Interiorismo · 2</button>
+<button class="filter-btn" data-filter="diseno">Diseño · 4</button>
+  </div>
+</div>
+
+<section class="gallery">
+  <div class="gallery-grid" id="galleryGrid">
+<!-- 36 proyectos | obra-nueva:10 · rehabilitacion:10 · urbanizacion:5 · diseno:4 · reforma:3 · urbanismo:2 · interior:2 -->
+<a class="proj-card" href="assets/projects/amorebietaetxano-obranueva.jpg" data-cat="obra-nueva" data-title="Amorebieta &#8211; Etxano" data-cat-label="Obra nueva">
+  <img src="assets/projects/amorebietaetxano-obranueva.jpg" alt="Amorebieta &#8211; Etxano — Obra nueva" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Obra nueva</span>
+    <span class="proj-title">Amorebieta &#8211; Etxano</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/arrosada-obranueva.jpg" data-cat="obra-nueva" data-title="Arrosadía" data-cat-label="Obra nueva">
+  <img src="assets/projects/arrosada-obranueva.jpg" alt="Arrosadía — Obra nueva" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Obra nueva</span>
+    <span class="proj-title">Arrosadía</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/atotxaerreka-obranueva.jpg" data-cat="obra-nueva" data-title="Atotxa Erreka" data-cat-label="Obra nueva">
+  <img src="assets/projects/atotxaerreka-obranueva.jpg" alt="Atotxa Erreka — Obra nueva" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Obra nueva</span>
+    <span class="proj-title">Atotxa Erreka</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/filipinas-11-obranueva.jpg" data-cat="obra-nueva" data-title="Filipinas 11" data-cat-label="Obra nueva">
+  <img src="assets/projects/filipinas-11-obranueva.jpg" alt="Filipinas 11 — Obra nueva" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Obra nueva</span>
+    <span class="proj-title">Filipinas 11</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/filipinas-12-obranueva.jpg" data-cat="obra-nueva" data-title="Filipinas 12" data-cat-label="Obra nueva">
+  <img src="assets/projects/filipinas-12-obranueva.jpg" alt="Filipinas 12 — Obra nueva" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Obra nueva</span>
+    <span class="proj-title">Filipinas 12</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/estanda-obranueva.jpg" data-cat="obra-nueva" data-title="Fundiciones del Estanda" data-cat-label="Obra nueva">
+  <img src="assets/projects/estanda-obranueva.jpg" alt="Fundiciones del Estanda — Obra nueva" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Obra nueva</span>
+    <span class="proj-title">Fundiciones del Estanda</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/torresolo-2-4-edificacion.jpg" data-cat="obra-nueva" data-title="Torresolo 2-4" data-cat-label="Obra nueva">
+  <img src="assets/projects/torresolo-2-4-edificacion.jpg" alt="Torresolo 2-4 — Obra nueva" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Obra nueva</span>
+    <span class="proj-title">Torresolo 2-4</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/vpo-basauri-edificacion.jpg" data-cat="obra-nueva" data-title="VPO Basauri" data-cat-label="Obra nueva">
+  <img src="assets/projects/vpo-basauri-edificacion.jpg" alt="VPO Basauri — Obra nueva" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Obra nueva</span>
+    <span class="proj-title">VPO Basauri</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/vpo-hernani-edificacion.jpg" data-cat="obra-nueva" data-title="VPO Hernani" data-cat-label="Obra nueva">
+  <img src="assets/projects/vpo-hernani-edificacion.jpg" alt="VPO Hernani — Obra nueva" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Obra nueva</span>
+    <span class="proj-title">VPO Hernani</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/zubiaurre-70-edificacion.jpg" data-cat="obra-nueva" data-title="Zubiaurre 70" data-cat-label="Obra nueva">
+  <img src="assets/projects/zubiaurre-70-edificacion.jpg" alt="Zubiaurre 70 — Obra nueva" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Obra nueva</span>
+    <span class="proj-title">Zubiaurre 70</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/alamedaboulevard-rehabilitaciones.jpg" data-cat="rehabilitacion" data-title="Alameda del Boulevard 2" data-cat-label="Rehabilitación">
+  <img src="assets/projects/alamedaboulevard-rehabilitaciones.jpg" alt="Alameda del Boulevard 2 — Rehabilitación" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Rehabilitación</span>
+    <span class="proj-title">Alameda del Boulevard 2</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/avenidamadrid-2-rehabilitaciones.jpg" data-cat="rehabilitacion" data-title="Avenida Madrid 2" data-cat-label="Rehabilitación">
+  <img src="assets/projects/avenidamadrid-2-rehabilitaciones.jpg" alt="Avenida Madrid 2 — Rehabilitación" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Rehabilitación</span>
+    <span class="proj-title">Avenida Madrid 2</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/berabera-rehabilitaciones.jpg" data-cat="rehabilitacion" data-title="Bera Bera" data-cat-label="Rehabilitación">
+  <img src="assets/projects/berabera-rehabilitaciones.jpg" alt="Bera Bera — Rehabilitación" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Rehabilitación</span>
+    <span class="proj-title">Bera Bera</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/josemariasoroa-28-rehabilitaciones.jpg" data-cat="rehabilitacion" data-title="José María Soroa 28" data-cat-label="Rehabilitación">
+  <img src="assets/projects/josemariasoroa-28-rehabilitaciones.jpg" alt="José María Soroa 28 — Rehabilitación" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Rehabilitación</span>
+    <span class="proj-title">José María Soroa 28</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/mendilauta-3-rehabilitaciones-1.jpg" data-cat="rehabilitacion" data-title="Mendilauta 3" data-cat-label="Rehabilitación">
+  <img src="assets/projects/mendilauta-3-rehabilitaciones-1.jpg" alt="Mendilauta 3 — Rehabilitación" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Rehabilitación</span>
+    <span class="proj-title">Mendilauta 3</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/munalurra-10-rehabilitaciones.jpg" data-cat="rehabilitacion" data-title="Munalurra 10" data-cat-label="Rehabilitación">
+  <img src="assets/projects/munalurra-10-rehabilitaciones.jpg" alt="Munalurra 10 — Rehabilitación" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Rehabilitación</span>
+    <span class="proj-title">Munalurra 10</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/paseofrancia-rehabilitaciones.jpg" data-cat="rehabilitacion" data-title="Paseo de Francia" data-cat-label="Rehabilitación">
+  <img src="assets/projects/paseofrancia-rehabilitaciones.jpg" alt="Paseo de Francia — Rehabilitación" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Rehabilitación</span>
+    <span class="proj-title">Paseo de Francia</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/ramonycajal-1-rehabilitaciones.jpg" data-cat="rehabilitacion" data-title="Ramón y Cajal 1" data-cat-label="Rehabilitación">
+  <img src="assets/projects/ramonycajal-1-rehabilitaciones.jpg" alt="Ramón y Cajal 1 — Rehabilitación" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Rehabilitación</span>
+    <span class="proj-title">Ramón y Cajal 1</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/sanbartolome-40-rehabilitaciones.jpg" data-cat="rehabilitacion" data-title="San Bartolomé 40" data-cat-label="Rehabilitación">
+  <img src="assets/projects/sanbartolome-40-rehabilitaciones.jpg" alt="San Bartolomé 40 — Rehabilitación" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Rehabilitación</span>
+    <span class="proj-title">San Bartolomé 40</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/torreeibar-rehabilitaciones.jpg" data-cat="rehabilitacion" data-title="Torre Ipurua" data-cat-label="Rehabilitación">
+  <img src="assets/projects/torreeibar-rehabilitaciones.jpg" alt="Torre Ipurua — Rehabilitación" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Rehabilitación</span>
+    <span class="proj-title">Torre Ipurua</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/arrasate-26-reformas.jpg" data-cat="reforma" data-title="Arrasate 26" data-cat-label="Reforma">
+  <img src="assets/projects/arrasate-26-reformas.jpg" alt="Arrasate 26 — Reforma" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Reforma</span>
+    <span class="proj-title">Arrasate 26</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/gausarkoficinasagipad-reformas.jpg" data-cat="reforma" data-title="Oficinas DFG y Agipad" data-cat-label="Reforma">
+  <img src="assets/projects/gausarkoficinasagipad-reformas.jpg" alt="Oficinas DFG y Agipad — Reforma" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Reforma</span>
+    <span class="proj-title">Oficinas DFG y Agipad</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/urbieta-34-reformas.jpg" data-cat="reforma" data-title="Urbieta 34" data-cat-label="Reforma">
+  <img src="assets/projects/urbieta-34-reformas.jpg" alt="Urbieta 34 — Reforma" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Reforma</span>
+    <span class="proj-title">Urbieta 34</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/filipinas-urbanizacion.jpg" data-cat="urbanizacion" data-title="Filipinas 11" data-cat-label="Urbanización">
+  <img src="assets/projects/filipinas-urbanizacion.jpg" alt="Filipinas 11 — Urbanización" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Urbanización</span>
+    <span class="proj-title">Filipinas 11</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/urdanibia-urbanizacion.jpg" data-cat="urbanizacion" data-title="Urdanibia" data-cat-label="Urbanización">
+  <img src="assets/projects/urdanibia-urbanizacion.jpg" alt="Urdanibia — Urbanización" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Urbanización</span>
+    <span class="proj-title">Urdanibia</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/urdanibia-urbanizacion-1.jpg" data-cat="urbanizacion" data-title="Urdanibia" data-cat-label="Urbanización">
+  <img src="assets/projects/urdanibia-urbanizacion-1.jpg" alt="Urdanibia — Urbanización" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Urbanización</span>
+    <span class="proj-title">Urdanibia</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/pellizar-urbanizacion.jpg" data-cat="urbanizacion" data-title="Zubiaurre 70" data-cat-label="Urbanización">
+  <img src="assets/projects/pellizar-urbanizacion.jpg" alt="Zubiaurre 70 — Urbanización" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Urbanización</span>
+    <span class="proj-title">Zubiaurre 70</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/agustinas-urbanizacion.jpg" data-cat="urbanizacion" data-title="Ámbito en Agustinas" data-cat-label="Urbanización">
+  <img src="assets/projects/agustinas-urbanizacion.jpg" alt="Ámbito en Agustinas — Urbanización" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Urbanización</span>
+    <span class="proj-title">Ámbito en Agustinas</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/pellizar-urbanismo.jpg" data-cat="urbanismo" data-title="Zubiaurre 70" data-cat-label="Urbanismo">
+  <img src="assets/projects/pellizar-urbanismo.jpg" alt="Zubiaurre 70 — Urbanismo" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Urbanismo</span>
+    <span class="proj-title">Zubiaurre 70</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/agustinas-urbanismo.jpg" data-cat="urbanismo" data-title="Ámbito en Agustinas" data-cat-label="Urbanismo">
+  <img src="assets/projects/agustinas-urbanismo.jpg" alt="Ámbito en Agustinas — Urbanismo" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Urbanismo</span>
+    <span class="proj-title">Ámbito en Agustinas</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/vivienda-1-decoracion-interior.jpg" data-cat="interior" data-title="Vivienda 1" data-cat-label="Interiorismo">
+  <img src="assets/projects/vivienda-1-decoracion-interior.jpg" alt="Vivienda 1 — Interiorismo" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Interiorismo</span>
+    <span class="proj-title">Vivienda 1</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/vivienda-2-decoracion-interior.jpg" data-cat="interior" data-title="Vivienda 2" data-cat-label="Interiorismo">
+  <img src="assets/projects/vivienda-2-decoracion-interior.jpg" alt="Vivienda 2 — Interiorismo" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Interiorismo</span>
+    <span class="proj-title">Vivienda 2</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/imagen-uiux-gausark.jpg" data-cat="diseno" data-title="Diseño UI/UX" data-cat-label="Diseño">
+  <img src="assets/projects/imagen-uiux-gausark.jpg" alt="Diseño UI/UX — Diseño" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Diseño</span>
+    <span class="proj-title">Diseño UI/UX</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/imagen-carteleria-gausark-scaled.jpg" data-cat="diseno" data-title="Diseño de Cartelería" data-cat-label="Diseño">
+  <img src="assets/projects/imagen-carteleria-gausark-scaled.jpg" alt="Diseño de Cartelería — Diseño" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Diseño</span>
+    <span class="proj-title">Diseño de Cartelería</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/oficinas-cesv.jpg" data-cat="diseno" data-title="Oficinas CESV" data-cat-label="Diseño">
+  <img src="assets/projects/oficinas-cesv.jpg" alt="Oficinas CESV — Diseño" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Diseño</span>
+    <span class="proj-title">Oficinas CESV</span>
+  </span>
+</a>
+<a class="proj-card" href="assets/projects/sariki.jpg" data-cat="diseno" data-title="Sariki" data-cat-label="Diseño">
+  <img src="assets/projects/sariki.jpg" alt="Sariki — Diseño" loading="lazy">
+  <span class="proj-info">
+    <span class="proj-cat">Diseño</span>
+    <span class="proj-title">Sariki</span>
+  </span>
+</a>
+
+  </div>
+</section>
+
+<section class="cta-final">
+  <p class="label" style="color:rgba(255,255,255,.7);">¿Tu próximo proyecto?</p>
+  <h2 class="title">Hablemos de su idea</h2>
+  <p>Trabajamos en toda Gipuzkoa. Le asesoramos sin compromiso.</p>
+  <a href="contacto.html" class="btn-white">Solicitar presupuesto</a>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-label="Visor de imagen ampliada">
+  <button class="lb-close" id="lbClose" aria-label="Cerrar">×</button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="Anterior">‹</button>
+  <button class="lb-btn lb-next" id="lbNext" aria-label="Siguiente">›</button>
+  <div class="lightbox-img-wrap">
+    <img class="lightbox-img" id="lbImg" alt="">
+    <div class="lightbox-meta">
+      <div class="lb-cat" id="lbCat"></div>
+      <div class="lb-title" id="lbTitle"></div>
+      <div class="lb-counter" id="lbCounter"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <img src="assets/logo.png" alt="Gausark S.L.P." class="footer-logo">
+        <p class="footer-desc">GAUSARK S.L.P. es una empresa de gestión y servicios técnicos profesionales de arquitectura y diseño con más de 40 años de experiencia.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="servicios.html">Servicios</a></li>
+          <li><a href="proyectos.html">Proyectos</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="mailto:gausarksl@gausark.es">gausarksl@gausark.es</a></li>
+          <li><a href="tel:943440752">943 44 07 52</a></li>
+          <li style="font-size:.85rem;line-height:1.7;color:rgba(255,255,255,.4);">Txapillo Kalea, 3, bajo izq<br>20009 Donostia, Gipuzkoa</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="aviso-legal.html">Aviso legal</a></li>
+          <li><a href="politica-privacidad.html">Política de privacidad</a></li>
+          <li><a href="politica-cookies.html">Política de cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© Gausark S.L.P. · Todos los derechos reservados</span>
+      <div class="footer-social"><a href="https://www.instagram.com/gausarksl/" target="_blank" rel="noopener">Instagram</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  const mobileClose = document.getElementById('mobileClose');
+  hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
+  mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileNav.classList.remove('open')));
+
+  // Filters
+  const filters = document.getElementById('filters');
+  const grid = document.getElementById('galleryGrid');
+  filters.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('filter-btn')) return;
+    filters.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    const f = e.target.dataset.filter;
+    grid.querySelectorAll('.proj-card').forEach(card => {
+      card.classList.toggle('hidden', f !== 'all' && card.dataset.cat !== f);
+    });
+  });
+
+  // Lightbox
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCat = document.getElementById('lbCat');
+  const lbTitle = document.getElementById('lbTitle');
+  const lbCounter = document.getElementById('lbCounter');
+  const lbClose = document.getElementById('lbClose');
+  const lbPrev = document.getElementById('lbPrev');
+  const lbNext = document.getElementById('lbNext');
+
+  let currentIdx = 0;
+  function visibleCards() {
+    return Array.from(grid.querySelectorAll('.proj-card:not(.hidden)'));
+  }
+  function open(idx) {
+    const cards = visibleCards();
+    if (!cards.length) return;
+    currentIdx = (idx + cards.length) % cards.length;
+    const c = cards[currentIdx];
+    lbImg.src = c.href;
+    lbImg.alt = c.dataset.title;
+    lbCat.textContent = c.dataset.catLabel;
+    lbTitle.textContent = c.dataset.title;
+    lbCounter.textContent = (currentIdx + 1) + ' / ' + cards.length;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function next() { open(currentIdx + 1); }
+  function prev() { open(currentIdx - 1); }
+
+  grid.addEventListener('click', (e) => {
+    const card = e.target.closest('.proj-card');
+    if (!card) return;
+    e.preventDefault();
+    const cards = visibleCards();
+    open(cards.indexOf(card));
+  });
+  lbClose.addEventListener('click', close);
+  lbNext.addEventListener('click', next);
+  lbPrev.addEventListener('click', prev);
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+</script>
+</body>
+</html>
