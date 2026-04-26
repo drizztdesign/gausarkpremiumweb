@@ -1,4 +1,4 @@
-"""Test scroll-driven video. Scrolls in steps, captures screenshots, measures lag."""
+ """Test scroll-driven video. Scrolls in steps, captures screenshots, measures lag."""
 import asyncio
 import time
 from pathlib import Path
