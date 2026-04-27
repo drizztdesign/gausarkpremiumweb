@@ -142,7 +142,7 @@
 
     /* HERO */
     .hero { position: relative; height: 100vh; min-height: 600px; display: flex; align-items: center; justify-content: flex-start; overflow: hidden; background: #1c1c1c; padding: 0 6vw; }
-    .scroll-video-wrapper { height: 175vh; }
+    .scroll-video-wrapper { height: 250vh; }
     .scroll-video-wrapper .hero { position: sticky; top: 0; height: 100vh; }
     /* Móvil: hero normal, sin scroll-driven (autoplay simple, siempre fluido) */
     @media (max-width: 768px) {
@@ -579,7 +579,7 @@
     var complete = false;
     var rafId    = null;
     var current  = 0;
-    var LERP     = 0.18;
+    var LERP     = 0.10;
     var frames   = [];     // ImageBitmap[] — un bitmap por frame
     var canvas   = null;
     var ctx      = null;
@@ -603,7 +603,9 @@
       if (!ready || !frames.length) { rafId = null; return; }
       var target = targetIndex();
       var diff   = target - current;
-      var k = Math.abs(diff) > 4 ? Math.min(0.5, LERP + Math.abs(diff) * 0.02) : LERP;
+      // LERP fijo: garantiza que CADA frame intermedio se dibuje (no salta
+      // aunque el scroll sea muy rápido). El vídeo va "detrás" del scroll
+      // pero la animación siempre se aprecia entera.
       if (Math.abs(diff) < 0.05) {
         current = target;
         drawFrame(Math.round(current));
@@ -611,7 +613,7 @@
         rafId = null;
         return;
       }
-      current += diff * k;
+      current += diff * LERP;
       drawFrame(Math.round(current));
       rafId = requestAnimationFrame(tick);
     }
